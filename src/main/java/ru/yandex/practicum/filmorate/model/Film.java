@@ -42,7 +42,7 @@ public class Film {
 
     private void validateDescription() throws ValidationException {
         //максимальная длина описания — 200 символов
-        if (description == null || description.length() >= 200) {
+        if (description == null || description.isBlank() || description.length() > 200) {
             throwValidationException("Максимальная длина описания — 200 символов");
         }
     }
