@@ -1,2 +1,4 @@
-# java-filmorate
-Template repository for Filmorate project.
+# **Java-filmorate**
+## *`Sprint 1`*
+#### *- Add Spring Boot (Web)*
+#### *- Add controllers*
