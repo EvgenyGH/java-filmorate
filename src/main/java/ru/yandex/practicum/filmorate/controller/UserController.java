@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.UserExistsException;
 import ru.yandex.practicum.filmorate.exception.UserNotExistsException;
+import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
@@ -19,8 +20,10 @@ public class UserController {
     private final Map<Integer, User> users = new HashMap<>();
 
     //создание нового пользователя
-    @PostMapping("/user")
-    public void addUser(@Valid @RequestBody User user) throws UserExistsException {
+    @PostMapping
+    public void addUser(@Valid @RequestBody User user) throws UserExistsException, ValidationException {
+        user.validate();
+
         if (users.putIfAbsent(user.getId(), user) != null) {
             log.warn(String.format("%-40s - %s", "Выброшено исключение"
                     , String.format("Пользователь id=%s уже создан", user.getId())));
@@ -30,8 +33,10 @@ public class UserController {
     }
 
     //обновление информации о пользователе
-    @PutMapping("/user")
-    public void updateUser(@Valid @RequestBody User user) throws UserNotExistsException {
+    @PutMapping
+    public void updateUser(@Valid @RequestBody User user) throws UserNotExistsException, ValidationException {
+        user.validate();
+
         if (users.replace(user.getId(), user) == null) {
             log.warn(String.format("%-40s - %s", "Выброшено исключение"
                     , String.format("Пользователя id=%s не существует", user.getId())));
