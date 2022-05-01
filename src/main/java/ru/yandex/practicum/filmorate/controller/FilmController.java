@@ -18,13 +18,16 @@ import java.util.Map;
 public class FilmController {
     //Коллекция всех фильмов
     private final Map<Integer, Film> films = new HashMap<>();
+    private int filmId = 0;
 
     //добавление нового фильма
     @PostMapping
-    public void addUser(@Valid @RequestBody Film film) throws FilmExistsException, ValidationException {
+    public void addUser(@RequestBody Film film) throws FilmExistsException, ValidationException {
+        film.setId(++filmId);
         film.validate();
 
         if (films.putIfAbsent(film.getId(), film) != null) {
+            filmId--;
             log.warn(String.format("%-40s - %s", "Выброшено исключение"
                     , String.format("Фильм id=%s уже создан", film.getId())));
             throw new FilmExistsException(String.format("Фильм id=%s уже создан", film.getId()));
@@ -34,7 +37,7 @@ public class FilmController {
 
     //обновление информации о фильме
     @PutMapping
-    public void updateUser(@Valid @RequestBody Film film) throws FilmNotExistsException, ValidationException {
+    public void updateUser(@RequestBody Film film) throws FilmNotExistsException, ValidationException {
         film.validate();
 
         if (films.replace(film.getId(), film) == null) {

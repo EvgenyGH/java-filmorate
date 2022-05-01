@@ -18,13 +18,16 @@ import java.util.Map;
 public class UserController {
     //Коллекция всех пользователей
     private final Map<Integer, User> users = new HashMap<>();
+    private int userId = 0;
 
     //создание нового пользователя
     @PostMapping
-    public void addUser(@Valid @RequestBody User user) throws UserExistsException, ValidationException {
+    public void addUser(@RequestBody User user) throws UserExistsException, ValidationException {
+        user.setId(++userId);
         user.validate();
 
         if (users.putIfAbsent(user.getId(), user) != null) {
+            --userId;
             log.warn(String.format("%-40s - %s", "Выброшено исключение"
                     , String.format("Пользователь id=%s уже создан", user.getId())));
             throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId()));
@@ -34,7 +37,7 @@ public class UserController {
 
     //обновление информации о пользователе
     @PutMapping
-    public void updateUser(@Valid @RequestBody User user) throws UserNotExistsException, ValidationException {
+    public void updateUser(@RequestBody User user) throws UserNotExistsException, ValidationException {
         user.validate();
 
         if (users.replace(user.getId(), user) == null) {
