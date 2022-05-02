@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
@@ -57,7 +58,8 @@ public class UserController {
 
     @ExceptionHandler(value = {ValidationException.class,
             UserExistsException.class, UserNotExistsException.class
-            , FilmExistsException.class, FilmNotExistsException.class})
+            , FilmExistsException.class, FilmNotExistsException.class
+            , MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handlerValidationExceptions(Exception exception) {
         log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
