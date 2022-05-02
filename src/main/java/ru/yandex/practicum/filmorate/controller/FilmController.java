@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.FilmExistsException;
-import ru.yandex.practicum.filmorate.exception.FilmNotExistsException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import javax.validation.Valid;
@@ -28,8 +28,6 @@ public class FilmController {
 
         if (films.putIfAbsent(film.getId(), film) != null) {
             filmId--;
-            log.warn(String.format("%-40s - %s", "Выброшено исключение"
-                    , String.format("Фильм id=%s уже создан", film.getId())));
             throw new FilmExistsException(String.format("Фильм id=%s уже создан", film.getId()));
         }
         log.trace(String.format("%-40s - %s", "Добавлен фильм", film));
@@ -43,8 +41,6 @@ public class FilmController {
         film.validate();
 
         if (films.replace(film.getId(), film) == null) {
-            log.warn(String.format("%-40s - %s", "Выброшено исключение"
-                    , String.format("Фильма id=%s не существует", film.getId())));
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId()));
         }
         log.trace(String.format("%-40s - %s", "Информация о фильме обновлена", film));
@@ -58,4 +54,12 @@ public class FilmController {
         return films.values();
     }
 
+    @ExceptionHandler(value = {ValidationException.class,
+            UserExistsException.class, UserNotExistsException.class
+            , FilmExistsException.class, FilmNotExistsException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handlerValidationExceptions(Exception exception) {
+        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }
