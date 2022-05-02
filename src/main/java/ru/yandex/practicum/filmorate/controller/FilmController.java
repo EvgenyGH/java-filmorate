@@ -22,7 +22,7 @@ public class FilmController {
 
     //добавление нового фильма
     @PostMapping
-    public void addUser(@Valid @RequestBody Film film) throws FilmExistsException, ValidationException {
+    public Film addUser(@Valid @RequestBody Film film) throws FilmExistsException, ValidationException {
         film.setId(++filmId);
         film.validate();
 
@@ -33,11 +33,13 @@ public class FilmController {
             throw new FilmExistsException(String.format("Фильм id=%s уже создан", film.getId()));
         }
         log.trace(String.format("%-40s - %s", "Добавлен фильм", film));
+
+        return film;
     }
 
     //обновление информации о фильме
     @PutMapping
-    public void updateUser(@Valid @RequestBody Film film) throws FilmNotExistsException, ValidationException {
+    public Film updateUser(@Valid @RequestBody Film film) throws FilmNotExistsException, ValidationException {
         film.validate();
 
         if (films.replace(film.getId(), film) == null) {
@@ -46,6 +48,8 @@ public class FilmController {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId()));
         }
         log.trace(String.format("%-40s - %s", "Информация о фильме обновлена", film));
+
+        return film;
     }
 
     //получение списка всех фильмов

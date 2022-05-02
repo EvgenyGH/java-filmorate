@@ -22,7 +22,7 @@ public class UserController {
 
     //создание нового пользователя
     @PostMapping
-    public void addUser(@Valid @RequestBody User user) throws UserExistsException, ValidationException {
+    public User addUser(@Valid @RequestBody User user) throws UserExistsException, ValidationException {
         user.setId(++userId);
         user.validate();
 
@@ -33,11 +33,13 @@ public class UserController {
             throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId()));
         }
         log.trace(String.format("%-40s - %s", "Добавлен пользователь", user));
+
+        return user;
     }
 
     //обновление информации о пользователе
     @PutMapping
-    public void updateUser(@Valid @RequestBody User user) throws UserNotExistsException, ValidationException {
+    public User updateUser(@Valid @RequestBody User user) throws UserNotExistsException, ValidationException {
         user.validate();
 
         if (users.replace(user.getId(), user) == null) {
@@ -46,6 +48,8 @@ public class UserController {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId()));
         }
         log.trace(String.format("%-40s - %s", "Информация о пользователе обновлена", user));
+
+        return user;
     }
 
     //получение списка всех пользователей
