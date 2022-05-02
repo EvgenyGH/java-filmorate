@@ -31,6 +31,6 @@ class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, LocalDate
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext context) {
         //дата релиза — не раньше 28 декабря 1895 года
-        return localDate.isAfter(LocalDate.of(1895, 12, 28));
+        return !localDate.isBefore(LocalDate.of(1895, 12, 28));
     }
 }
