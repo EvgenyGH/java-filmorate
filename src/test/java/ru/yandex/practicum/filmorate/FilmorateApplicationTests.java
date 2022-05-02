@@ -152,6 +152,7 @@ class FilmorateApplicationTests {
         film.setId(1);
         film.setReleaseDate(LocalDate.now());
         film.setDescription("Film Description");
+        film.setDuration(120);
 
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))

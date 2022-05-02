@@ -22,7 +22,7 @@ public class FilmController {
 
     //добавление нового фильма
     @PostMapping
-    public Film addUser(@Valid @RequestBody Film film) throws FilmExistsException {
+    public Film addFilm(@Valid @RequestBody Film film) throws FilmExistsException {
         film.setId(++filmId);
 
         if (films.putIfAbsent(film.getId(), film) != null) {
@@ -36,7 +36,7 @@ public class FilmController {
 
     //обновление информации о фильме
     @PutMapping
-    public Film updateUser(@Valid @RequestBody Film film) throws FilmNotExistsException, ValidationException {
+    public Film updateFilm(@Valid @RequestBody Film film) throws FilmNotExistsException, ValidationException {
         film.validateId();
 
         if (films.replace(film.getId(), film) == null) {
