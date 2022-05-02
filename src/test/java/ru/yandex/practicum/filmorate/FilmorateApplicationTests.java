@@ -92,6 +92,13 @@ class FilmorateApplicationTests {
         mockMvc.perform(put("/users").content(mapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
+        user.setLogin("log in");
+        mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(put("/users").content(mapper.writeValueAsString(user))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
 
         user.setName(null);
         mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
