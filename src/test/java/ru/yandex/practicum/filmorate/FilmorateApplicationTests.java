@@ -27,46 +27,62 @@ class FilmorateApplicationTests {
 	@Test
 	void test1PostPutGetUserTests() throws Exception {
 		User user = new User();
-		user.setId(1);
 		user.setEmail("j3000@bk.ru");
 		user.setLogin("Login");
 		user.setName("Name");
 		user.setBirthday(LocalDate.of(1957, 12, 12));
 
 		String body = mapper.writeValueAsString(user);
-		mockMvc.perform(post("/users").content(body).contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 
-		user.setId(0);
-		assertThrows(ValidationException.class, user::validate);
-		user.setId(1);
-
 		user.setEmail("   ");
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setEmail(null);
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setEmail("j3000bk.ru");
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setEmail("j3000@bk.ru");
 
 		user.setLogin(null);
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setLogin("   ");
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setLogin("");
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setLogin("Login");
 
 		user.setName(null);
-		assertDoesNotThrow(user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setName("   ");
-		assertDoesNotThrow(user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setName("");
-		assertDoesNotThrow(user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 		user.setName("Name");
 
 		user.setBirthday(LocalDate.now().plusDays(1));
-		assertThrows(ValidationException.class, user::validate);
+		mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().is5xxServerError());
 	}
 
 }
