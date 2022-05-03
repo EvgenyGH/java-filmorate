@@ -27,10 +27,11 @@ public @interface ReleaseDate {
 }
 
 class ReleaseDateValidator implements ConstraintValidator<ReleaseDate, LocalDate> {
+    private static final LocalDate EARLIEST_DATE = LocalDate.of(1895, 12, 28);
 
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext context) {
         //дата релиза — не раньше 28 декабря 1895 года
-        return !localDate.isBefore(LocalDate.of(1895, 12, 28));
+        return !localDate.isBefore(EARLIEST_DATE);
     }
 }

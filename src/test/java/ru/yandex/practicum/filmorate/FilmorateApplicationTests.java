@@ -19,9 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class FilmorateApplicationTests {
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Test
     void test1PostPutGetUserTests() throws Exception {
