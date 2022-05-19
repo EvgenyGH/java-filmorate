@@ -1,68 +1,45 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-@Slf4j
 public class UserController {
-    //Коллекция всех пользователей
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userId = 0;
+    //Хранилище пользователей
+    private final UserStorage userStorage;
+
+    @Autowired
+    public UserController(InMemoryUserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     //создание нового пользователя
     @PostMapping
-    public User addUser(@Valid @RequestBody User user) throws UserExistsException {
-        user.setId(++userId);
-        user.validateName();
-
-        if (users.putIfAbsent(user.getId(), user) != null) {
-            --userId;
-            throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId()));
-        }
-        log.trace(String.format("%-40s - %s", "Добавлен пользователь", user));
-
-        return user;
+    public User addUser(@Valid @RequestBody User user) {
+        return userStorage.addUser(user);
     }
 
     //обновление информации о пользователе
     @PutMapping
-    public User updateUser(@Valid @RequestBody User user) throws UserNotExistsException, ValidationException {
-        user.validateName();
-        user.validateId();
-
-        if (users.replace(user.getId(), user) == null) {
-            throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId()));
-        }
-        log.trace(String.format("%-40s - %s", "Информация о пользователе обновлена", user));
-
-        return user;
+    public User updateUser(@Valid @RequestBody User user) {
+        return userStorage.updateUser(user);
     }
 
     //получение списка всех пользователей
     @GetMapping
     public Collection<User> getUsers() {
-        return users.values();
+        return userStorage.getUsers();
     }
 
-    @ExceptionHandler(value = {ValidationException.class,
-            UserExistsException.class, UserNotExistsException.class
-            , FilmExistsException.class, FilmNotExistsException.class
-            , MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handlerValidationExceptions(Exception exception) {
-        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable int id){
+        return userStorage.getUserById(id);
     }
 }

@@ -6,6 +6,8 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Slf4j
@@ -13,7 +15,7 @@ public class User {
     private int id;
     //электронная почта не может быть пустой и должна содержать символ @
     @Email
-    @NotNull
+    @NotBlank
     private String email;
     //логин не может быть пустым и содержать пробелы
     @Pattern(regexp = "[\\S]+")
@@ -24,6 +26,9 @@ public class User {
     //дата рождения не может быть в будущем
     @PastOrPresent
     private LocalDate birthday;
+
+    //список друзей
+    private Set<User> friends = new HashSet<>();
 
     public void validateId() throws ValidationException {
         if (id <= 0) {

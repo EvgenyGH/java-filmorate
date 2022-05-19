@@ -1,0 +1,45 @@
+package ru.yandex.practicum.filmorate.exceptionhandlers;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.yandex.practicum.filmorate.exception.*;
+import ru.yandex.practicum.filmorate.model.ErrorResponse;
+
+@RestControllerAdvice(basePackages = "ru.yandex.practicum.filmorate.controller")
+@Slf4j
+public class ExceptionHandlers {
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class, ValidationException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse validationExceptionHandler(Exception exception) {
+        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
+        return new ErrorResponse("Ошибка валидации входящих данных.");
+    }
+
+    @ExceptionHandler(value = {UserNotExistsException.class, FilmNotExistsException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse notFoundHandler(Exception exception) {
+        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
+        return new ErrorResponse("Объект не найден.");
+    }
+
+    @ExceptionHandler(value = {UserExistsException.class, FilmExistsException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse alreadyExistsHandler(Exception exception) {
+        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
+        return new ErrorResponse("Объект уже существует.");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse otherExceptionHandler(Exception exception) {
+        log.warn(String.format("%-40s - %s", "Выброшено исключение", exception.getMessage()));
+        return new ErrorResponse("Неизвестная ошибка.");
+    }
+
+}
+
+
