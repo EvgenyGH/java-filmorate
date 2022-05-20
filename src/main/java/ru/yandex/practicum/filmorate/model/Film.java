@@ -16,7 +16,6 @@ import java.util.Set;
 @Slf4j
 public class Film {
     private long id;
-
     //название не может быть пустым
     @NotBlank
     private String name;
@@ -30,9 +29,8 @@ public class Film {
     //продолжительность фильма должна быть положительной
     @Positive
     private int duration;
-
-    //список лайков пользователей
-    private Set<User> filmLikes = new HashSet<>();
+    //список лайков пользователей(id)
+    private Set<Long> filmLikes = new HashSet<>();
 
     public void validateId() throws ValidationException {
         if (id <= 0) {

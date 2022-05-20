@@ -29,9 +29,8 @@ public class User {
     //дата рождения не может быть в будущем
     @PastOrPresent
     private LocalDate birthday;
-
-    //список друзей
-    private Set<User> friends = new HashSet<>();
+    //список друзей (id)
+    private Set<Long> friends = new HashSet<>();
 
     public void validateId() throws ValidationException {
         if (id <= 0) {

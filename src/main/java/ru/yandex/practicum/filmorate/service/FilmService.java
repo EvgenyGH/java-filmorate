@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class FilmService {
     public Film addLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
-        filmStorage.getFilmById(filmId).getFilmLikes().add(userStorage.getUserById(userId));
+        filmStorage.getFilmById(filmId).getFilmLikes().add(userId);
 
         log.trace(String.format("%-40s - %s", "Добавлен лайк к фильму", "Film id="
                 + filmId + " User id=" + userId));
@@ -40,7 +41,7 @@ public class FilmService {
     public Film removeLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
-        filmStorage.getFilmById(filmId).getFilmLikes().remove(userStorage.getUserById(userId));
+        filmStorage.getFilmById(filmId).getFilmLikes().remove(userId);
 
         log.trace(String.format("%-40s - %s", "Удален лайк к фильму", "Film id="
                 + filmId + " User id=" + userId));
@@ -49,7 +50,7 @@ public class FilmService {
     }
 
     //получить топ популярных фильмов
-    public Set<Film> getTopFilms(long count) {
+    public List<Film> getTopFilms(long count) {
         log.trace(String.format("%-40s - %s", "Отправлен топ популярных фильмов"
                 , "Количество фильмов - " + count));
         return filmStorage.getFilms().stream().sorted((film1, film2) -> {
@@ -57,13 +58,13 @@ public class FilmService {
                     long film2Likes = film2.getFilmLikes().size();
 
                     if (film1Likes < film2Likes) {
-                        return -1;
-                    } else if (film1Likes > film2Likes) {
                         return 1;
+                    } else if (film1Likes > film2Likes) {
+                        return -1;
                     }
                     return 0;
                 })
-                .limit(count).collect(Collectors.toSet());
+                .limit(count).collect(Collectors.toList());
     }
 
     //проверка существования фильма и юзера

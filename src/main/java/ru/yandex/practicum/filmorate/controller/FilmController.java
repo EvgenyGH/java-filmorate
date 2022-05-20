@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -65,7 +66,7 @@ public class FilmController {
     //возвращает список из первых count фильмов по количеству лайков.
     //если значение параметра count не задано, возвращает первые 10.
     @GetMapping("/popular")
-    public Set<Film> removeLike(@RequestParam(defaultValue = "10") @Min(1) long count) {
+    public List<Film> removeLike(@RequestParam(defaultValue = "10") @Min(1) long count) {
         return filmService.getTopFilms(count);
     }
 }

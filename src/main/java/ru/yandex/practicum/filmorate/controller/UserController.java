@@ -52,7 +52,7 @@ public class UserController {
     }
 
     //добавление в друзья
-    @PutMapping("/users/{id}/friends/{friendId}")
+    @PutMapping("/{id}/friends/{friendId}")
     public User addFriend(@PathVariable("id") @Min(1) long userId, @PathVariable @Min(1) long friendId) {
         return userService.addFriend(userId, friendId);
     }
@@ -63,14 +63,14 @@ public class UserController {
         return userService.removeFriend(userId, friendId);
     }
 
-    //возвращает список пользователей, являющихся его друзьями
+    //возвращает список пользователей, являющихся друзьями
     @GetMapping("/{id}/friends")
     public Set<User> getFriends(@PathVariable @Min(1) long id) {
-        return userStorage.getUserById(id).getFriends();
+        return userService.getFriends(id);
     }
 
     //список друзей, общих с другим пользователем
-    @GetMapping("/users/{id}/friends/common/{otherId}")
+    @GetMapping("/{id}/friends/common/{otherId}")
     public Set<User> getMutualFriends(@PathVariable("id") @Min(1) long user1Id
             , @PathVariable("otherId") @Min(1) long user2Id) {
         return userService.getMutualFriends(user1Id, user2Id);
