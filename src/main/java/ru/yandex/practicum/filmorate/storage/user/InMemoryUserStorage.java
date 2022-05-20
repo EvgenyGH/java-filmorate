@@ -13,8 +13,8 @@ import java.util.Map;
 @Component
 @Slf4j
 public class InMemoryUserStorage implements UserStorage {
-    private final Map<Integer, User> users = new HashMap<>();
-    private int userId = 0;
+    private final Map<Long, User> users = new HashMap<>();
+    private long userId = 0;
 
     //создание нового пользователя
     @Override
@@ -56,7 +56,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     //поучение имени пользователя по id
     @Override
-    public User getUserById(int id) {
+    public User getUserById(long id) {
         User user = users.get(id);
 
         if (user == null) {

@@ -25,7 +25,7 @@ public class FilmService {
     }
 
     //добавить лайк
-    public Film addLike(int filmId, int userId) {
+    public Film addLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
         filmStorage.getFilmById(filmId).getFilmLikes().add(userStorage.getUserById(userId));
@@ -37,7 +37,7 @@ public class FilmService {
     }
 
     //удалить лайк
-    public Film removeLike(int filmId, int userId) {
+    public Film removeLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
         filmStorage.getFilmById(filmId).getFilmLikes().remove(userStorage.getUserById(userId));
@@ -49,12 +49,12 @@ public class FilmService {
     }
 
     //получить топ популярных фильмов
-    public Set<Film> getTopFilms(int count) {
+    public Set<Film> getTopFilms(long count) {
         log.trace(String.format("%-40s - %s", "Отправлен топ популярных фильмов"
                 , "Количество фильмов - " + count));
         return filmStorage.getFilms().stream().sorted((film1, film2) -> {
-                    int film1Likes = film1.getFilmLikes().size();
-                    int film2Likes = film2.getFilmLikes().size();
+                    long film1Likes = film1.getFilmLikes().size();
+                    long film2Likes = film2.getFilmLikes().size();
 
                     if (film1Likes < film2Likes) {
                         return -1;
@@ -67,7 +67,7 @@ public class FilmService {
     }
 
     //проверка существования фильма и юзера
-    private void validateFilmAndUser(int filmId, int userId) {
+    private void validateFilmAndUser(long filmId, long userId) {
         if (filmStorage.getFilmById(filmId) == null) {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", filmId)
                     , String.format("Фильм id=%s", filmId));

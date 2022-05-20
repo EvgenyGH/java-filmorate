@@ -21,7 +21,7 @@ public class UserService {
     }
 
     //добавление в друзья
-    public User addFriend(int idMain, int idFriend) {
+    public User addFriend(long idMain, long idFriend) {
         User userMain = userStorage.getUserById(idMain);
         User userFriend = userStorage.getUserById(idFriend);
 
@@ -37,7 +37,7 @@ public class UserService {
     }
 
     //удаление из друзей
-    public User removeFriend(int idMain, int idFriend) {
+    public User removeFriend(long idMain, long idFriend) {
         User userMain = userStorage.getUserById(idMain);
         User userFriend = userStorage.getUserById(idFriend);
 
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     //вывод списка общих друзей
-    public Set<User> getMutualFriends(int id1, int id2) {
+    public Set<User> getMutualFriends(long id1, long id2) {
         Set<User> user1Friends = userStorage.getUserById(id1).getFriends();
         Set<User> user2Friends = userStorage.getUserById(id2).getFriends();
 
@@ -64,7 +64,7 @@ public class UserService {
     }
 
     //проверка на существование друзей
-    private void validateUsers(int id1, int id2) {
+    private void validateUsers(long id1, long id2) {
         if (userStorage.getUserById(id1) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует.", id1)
                     , String.format("Пользователь id=%s.", id1));

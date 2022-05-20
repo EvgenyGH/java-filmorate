@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @Slf4j
 public class Film {
-    private int id;
+    private long id;
 
     //название не может быть пустым
     @NotBlank

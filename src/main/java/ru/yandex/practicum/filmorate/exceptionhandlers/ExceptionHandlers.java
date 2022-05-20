@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.yandex.practicum.filmorate.exception.*;
 import ru.yandex.practicum.filmorate.model.ErrorResponse;
-import  javax.validation.ConstraintViolationException;
+
+import javax.validation.ConstraintViolationException;
 
 @RestControllerAdvice(basePackages = "ru.yandex.practicum.filmorate.controller")
 @Slf4j

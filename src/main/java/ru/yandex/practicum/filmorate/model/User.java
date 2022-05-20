@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @Slf4j
 public class User {
-    private int id;
+    private long id;
     //электронная почта не может быть пустой и должна содержать символ @
     @Email
     @NotBlank

@@ -14,7 +14,7 @@ import java.util.Map;
 @Component
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
     private int filmId = 0;
 
     //добавление нового фильма
@@ -55,7 +55,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     //поучение имени пользователя по id
     @Override
-    public Film getFilmById(int id) {
+    public Film getFilmById(long id) {
         Film film = films.get(id);
 
         if (film == null) {
