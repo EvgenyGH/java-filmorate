@@ -7,7 +7,7 @@ public class ErrorResponse {
 
     public ErrorResponse(String error) {
         this.error = error;
-        this.object = "Не определен.";
+        this.object = "-";
     }
 
     public ErrorResponse(String error, String object) {
