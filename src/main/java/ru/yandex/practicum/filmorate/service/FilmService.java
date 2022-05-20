@@ -24,17 +24,21 @@ public class FilmService {
     }
 
     //добавить лайк
-    public void addLike(int filmId, int userId) {
+    public Film addLike(int filmId, int userId) {
         validateFilmAndUser(filmId, userId);
 
         filmStorage.getFilmById(filmId).getFilmLikes().add(userStorage.getUserById(userId));
+
+        return filmStorage.getFilmById(filmId);
     }
 
     //удалить лайк
-    public void removeLike(int filmId, int userId) {
+    public Film removeLike(int filmId, int userId) {
         validateFilmAndUser(filmId, userId);
 
         filmStorage.getFilmById(filmId).getFilmLikes().remove(userStorage.getUserById(userId));
+
+        return filmStorage.getFilmById(filmId);
     }
 
     //получить топ популярных фильмов

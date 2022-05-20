@@ -29,7 +29,7 @@ public class UserService {
         userMain.getFriends().add(userFriend);
         userFriend.getFriends().add(userMain);
 
-        return userFriend;
+        return userMain;
     }
 
     //удаление из друзей
@@ -42,7 +42,7 @@ public class UserService {
         userMain.getFriends().remove(userFriend);
         userFriend.getFriends().remove(userMain);
 
-        return userFriend;
+        return userMain;
     }
 
     //вывод списка общих друзей
