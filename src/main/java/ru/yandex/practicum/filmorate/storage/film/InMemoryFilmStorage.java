@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.FilmExistsException;
 import ru.yandex.practicum.filmorate.exception.FilmNotExistsException;
 import ru.yandex.practicum.filmorate.exception.UserNotExistsException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.Collection;
@@ -50,16 +49,13 @@ public class InMemoryFilmStorage implements FilmStorage {
     //получение списка всех фильмов
     @Override
     public Collection<Film> getFilms() {
+        log.trace(String.format("%-40s - %s", "Информация о всех фильмах отправлена", ""));
         return films.values();
     }
 
     //поучение имени пользователя по id
     @Override
     public Film getFilmById(int id) {
-        if (id <= 0) {
-            throw new ValidationException("ID должен быть > 0");
-        }
-
         Film film = films.get(id);
 
         if (film == null) {

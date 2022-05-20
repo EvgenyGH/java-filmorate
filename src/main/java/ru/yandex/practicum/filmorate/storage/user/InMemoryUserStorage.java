@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.UserExistsException;
 import ru.yandex.practicum.filmorate.exception.UserNotExistsException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
@@ -51,16 +50,13 @@ public class InMemoryUserStorage implements UserStorage {
     //получение списка всех пользователей
     @Override
     public Collection<User> getUsers() {
+        log.trace(String.format("%-40s - %s", "Информация о всех пользователях отправлена", ""));
         return users.values();
     }
 
     //поучение имени пользователя по id
     @Override
     public User getUserById(int id) {
-        if (id <= 0) {
-            throw new ValidationException("ID должен быть > 0");
-        }
-
         User user = users.get(id);
 
         if (user == null) {

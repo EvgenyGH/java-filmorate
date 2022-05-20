@@ -1,17 +1,19 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@Validated
 @RequestMapping("/films")
 public class FilmController {
     //Хранилище фильмов
@@ -44,27 +46,27 @@ public class FilmController {
 
     //получить фильм по id
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable int id) {
+    public Film getFilmById(@PathVariable @Min(1) int id) {
         return filmStorage.getFilmById(id);
     }
 
     //пользователь ставит лайк фильму
     @PutMapping("/{id}/like/{userId}")
-    public Film addLike(@PathVariable("id") int filmId, @PathVariable int userId) {
+    public Film addLike(@PathVariable("id") @Min(1) int filmId, @PathVariable @Min(1) int userId) {
         return filmService.addLike(filmId, userId);
     }
 
     //пользователь удаляет лайк
     @DeleteMapping("/{id}/like/{userId}")
-    public Film removeLike(@PathVariable("id") int filmId, @PathVariable int userId) {
+    public Film removeLike(@PathVariable("id") @Min(1) int filmId, @PathVariable @Min(1) int userId) {
         return filmService.removeLike(filmId, userId);
     }
 
     //возвращает список из первых count фильмов по количеству лайков.
     //если значение параметра count не задано, возвращает первые 10.
-    @GetMapping("/popular?count={count}")
-    public Set<Film> removeLike(@PathVariable(required = false) Optional<Integer> count) {
-        return filmService.getTopFilms(count.orElse(0));
+    @GetMapping("/popular")
+    public Set<Film> removeLike(@RequestParam(defaultValue = "10") @Min(1) int count) {
+        return filmService.getTopFilms(count);
     }
 }
 // TODO: 20.05.2022 might be move id from int to long
