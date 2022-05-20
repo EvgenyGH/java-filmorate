@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class InMemoryUserStorage implements UserStorage{
+public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
     private int userId = 0;
 
@@ -25,7 +25,8 @@ public class InMemoryUserStorage implements UserStorage{
 
         if (users.putIfAbsent(user.getId(), user) != null) {
             --userId;
-            throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId()));
+            throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId())
+                    , String.format("Пользователь id=%s", user.getId()));
         }
         log.trace(String.format("%-40s - %s", "Добавлен пользователь", user));
 
@@ -39,7 +40,8 @@ public class InMemoryUserStorage implements UserStorage{
         user.validateId();
 
         if (users.replace(user.getId(), user) == null) {
-            throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId()));
+            throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId())
+                    , String.format("Пользователь id=%s", user.getId()));
         }
         log.trace(String.format("%-40s - %s", "Информация о пользователе обновлена", user));
 
@@ -61,8 +63,9 @@ public class InMemoryUserStorage implements UserStorage{
 
         User user = users.get(id);
 
-        if(user == null){
-            throw new UserNotExistsException(String.format("Пользователя id=%s не существует", id));
+        if (user == null) {
+            throw new UserNotExistsException(String.format("Пользователя id=%s не существует", id)
+                    , String.format("Пользователь id=%s", id));
         }
 
         log.trace(String.format("%-40s - %s", "Информация о пользователе отправлена", "id=" + id));
