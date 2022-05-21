@@ -408,5 +408,4 @@ class FilmorateApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     // TODO: 21.05.2022 add id to response
-    // TODO: 21.05.2022 autowired delete
 }
