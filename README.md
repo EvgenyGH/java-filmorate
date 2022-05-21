@@ -5,6 +5,7 @@
 #### *- Refactor classes FilmController & UserController*
 #### *- Add classes FilmService & UserService*
 #### *- Refactor exception handlers*
+#### *- Add integration tests*
 
 ---
 

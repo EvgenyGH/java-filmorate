@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.exception;
 
-public class BaseFilmAndUserException extends RuntimeException{
-    private String object;
+public class BaseFilmAndUserException extends RuntimeException {
+    private final String object;
 
     public BaseFilmAndUserException(String message, String object) {
         super(message);
