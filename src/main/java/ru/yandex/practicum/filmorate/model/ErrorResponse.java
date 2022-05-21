@@ -34,4 +34,8 @@ public class ErrorResponse {
     public String getDateTime() {
         return dateTime;
     }
+
+    public String getId() {
+        return id;
+    }
 }

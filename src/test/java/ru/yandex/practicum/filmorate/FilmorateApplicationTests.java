@@ -407,5 +407,4 @@ class FilmorateApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-    // TODO: 21.05.2022 add id to response
 }
