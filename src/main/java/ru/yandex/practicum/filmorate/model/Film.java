@@ -15,6 +15,7 @@ import java.util.Set;
 @Data
 @Slf4j
 public class Film {
+    //По условиям ТЗ id может быть отрицательным
     private long id;
     //название не может быть пустым
     @NotBlank
@@ -31,12 +32,6 @@ public class Film {
     private int duration;
     //список лайков пользователей(id)
     private Set<Long> filmLikes = new HashSet<>();
-
-    public void validateId() throws ValidationException {
-        if (id <= 0) {
-            throwValidationException("ID должен быть > 0");
-        }
-    }
 
     private void throwValidationException(String message) throws ValidationException {
         log.warn(String.format("%-40s - ID=%5s - %s", "Выброшено исключение", id, message));

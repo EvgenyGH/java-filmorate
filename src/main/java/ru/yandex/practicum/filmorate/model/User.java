@@ -15,6 +15,7 @@ import java.util.Set;
 @Data
 @Slf4j
 public class User {
+    //По условиям ТЗ id может быть отрицательным
     private long id;
     //электронная почта не может быть пустой и должна содержать символ @
     @Email
@@ -31,12 +32,6 @@ public class User {
     private LocalDate birthday;
     //список друзей (id)
     private Set<Long> friends = new HashSet<>();
-
-    public void validateId() throws ValidationException {
-        if (id <= 0) {
-            throwValidationException("ID должен быть > 0");
-        }
-    }
 
     public void validateName() {
         //имя для отображения может быть пустым — в таком случае будет использован логин

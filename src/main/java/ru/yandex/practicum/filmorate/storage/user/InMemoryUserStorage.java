@@ -36,7 +36,6 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public User updateUser(User user) {
         user.validateName();
-        user.validateId();
 
         if (users.replace(user.getId(), user) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId())

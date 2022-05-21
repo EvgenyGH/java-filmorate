@@ -35,7 +35,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     //обновление информации о фильме
     @Override
     public Film updateFilm(Film film) {
-        film.validateId();
 
         if (films.replace(film.getId(), film) == null) {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId())

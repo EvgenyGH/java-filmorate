@@ -270,7 +270,7 @@ class FilmorateApplicationTests {
         mockMvc.perform(get("/films/2").contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(films[1])));
         mockMvc.perform(get("/films/-1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
         mockMvc.perform(get("/films/7").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -278,7 +278,7 @@ class FilmorateApplicationTests {
         mockMvc.perform(get("/users/2").contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(users[1])));
         mockMvc.perform(get("/users/-1").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
         mockMvc.perform(get("/users/7").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
@@ -301,9 +301,9 @@ class FilmorateApplicationTests {
         mockMvc.perform(delete("/users/{id}/friends/{friendId}", 6, 7)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-        mockMvc.perform(delete("/users/{id}/friends/{friendId}", -1, -1)
+        mockMvc.perform(delete("/users/{id}/friends/{friendId}", -1, -2)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
         //тест endpoint /users/{id}/friends GET
         mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 2)
@@ -322,7 +322,7 @@ class FilmorateApplicationTests {
                 .andExpect(status().isNotFound());
         mockMvc.perform(get("/users/{id}/friends", -1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
 
         //тест endpoint /users/{id}/friends/common/{otherId} GET
@@ -345,7 +345,7 @@ class FilmorateApplicationTests {
                 .andExpect(status().isNotFound());
         mockMvc.perform(get("/users/{id}/friends/common/{otherId}", 1, -1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
         //тест endpoint /films/{id}/like/{userId} PUT
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 1)
@@ -356,7 +356,7 @@ class FilmorateApplicationTests {
                 .andExpect(status().isNotFound());
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, -1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
         //тест endpoint /films/{id}/like/{userId} DELETE
         mockMvc.perform(delete("/films/{id}/like/{userId}", 1, 1)
@@ -367,7 +367,7 @@ class FilmorateApplicationTests {
                 .andExpect(status().isNotFound());
         mockMvc.perform(delete("/films/{id}/like/{userId}", 1, -1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isNotFound());
 
 
         //тест endpoint /films/popular GET
