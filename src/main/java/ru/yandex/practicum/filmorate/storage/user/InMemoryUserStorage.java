@@ -25,7 +25,7 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.putIfAbsent(user.getId(), user) != null) {
             --userId;
             throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId())
-                    , String.format("Пользователь id=%s", user.getId()));
+                    , Map.of("object", "user", "id", String.valueOf(user.getId())));
         }
         log.trace(String.format("%-40s - %s", "Добавлен пользователь", user));
 
@@ -40,7 +40,7 @@ public class InMemoryUserStorage implements UserStorage {
 
         if (users.replace(user.getId(), user) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId())
-                    , String.format("Пользователь id=%s", user.getId()));
+                    , Map.of("object", "user", "id", String.valueOf(user.getId())));
         }
         log.trace(String.format("%-40s - %s", "Информация о пользователе обновлена", user));
 
@@ -61,7 +61,7 @@ public class InMemoryUserStorage implements UserStorage {
 
         if (user == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует", id)
-                    , String.format("Пользователь id=%s", id));
+                    , Map.of("object", "user", "id", String.valueOf(id)));
         }
 
         log.trace(String.format("%-40s - %s", "Информация о пользователе отправлена", "id=" + id));

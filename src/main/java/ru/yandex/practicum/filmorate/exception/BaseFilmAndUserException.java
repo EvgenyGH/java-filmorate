@@ -1,14 +1,16 @@
 package ru.yandex.practicum.filmorate.exception;
 
-public class BaseFilmAndUserException extends RuntimeException {
-    private final String object;
+import java.util.Map;
 
-    public BaseFilmAndUserException(String message, String object) {
+public class BaseFilmAndUserException extends RuntimeException {
+    private final Map<String, String> properties;
+
+    public BaseFilmAndUserException(String message, Map<String, String> properties) {
         super(message);
-        this.object = object;
+        this.properties = properties;
     }
 
-    public String getObject() {
-        return object;
+    public Map<String, String> getProperties() {
+        return properties;
     }
 }

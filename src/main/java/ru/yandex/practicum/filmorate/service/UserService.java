@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -77,10 +78,10 @@ public class UserService {
             throw new ValidationException(String.format("Id пользователей одинаковы id=%s.", id1));
         } else if (userStorage.getUserById(id1) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует.", id1)
-                    , String.format("Пользователь id=%s.", id1));
+                    , Map.of("object", "user", "id", String.valueOf(id1)));
         } else if (userStorage.getUserById(id2) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует.", id2)
-                    , String.format("Пользователь id=%s.", id2));
+                    , Map.of("object", "user", "id", String.valueOf(id2)));
         }
     }
 }

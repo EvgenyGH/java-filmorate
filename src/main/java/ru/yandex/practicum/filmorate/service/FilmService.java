@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,10 +69,10 @@ public class FilmService {
     private void validateFilmAndUser(long filmId, long userId) {
         if (filmStorage.getFilmById(filmId) == null) {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", filmId)
-                    , String.format("Фильм id=%s", filmId));
+                    , Map.of("object", "film", "id", String.valueOf(filmId)));
         } else if (userStorage.getUserById(userId) == null) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует.", userId)
-                    , String.format("Пользователь id=%s.", userId));
+                    , Map.of("object", "user", "id", String.valueOf(userId)));
         }
     }
 }

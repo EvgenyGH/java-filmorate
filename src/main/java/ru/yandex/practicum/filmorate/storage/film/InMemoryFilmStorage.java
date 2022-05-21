@@ -25,7 +25,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         if (films.putIfAbsent(film.getId(), film) != null) {
             filmId--;
             throw new FilmExistsException(String.format("Фильм id=%s уже создан", film.getId())
-                    , String.format("Фильм id=%s", film.getId()));
+                    , Map.of("object", "film", "id", String.valueOf(film.getId())));
         }
         log.trace(String.format("%-40s - %s", "Добавлен фильм", film));
 
@@ -39,7 +39,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         if (films.replace(film.getId(), film) == null) {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId())
-                    , String.format("Фильм id=%s", film.getId()));
+                    , Map.of("object", "film", "id", String.valueOf(film.getId())));
         }
         log.trace(String.format("%-40s - %s", "Информация о фильме обновлена", film));
 
@@ -60,7 +60,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
         if (film == null) {
             throw new UserNotExistsException(String.format("Фильма id=%s не существует", id)
-                    , String.format("Фильм id=%s", id));
+                    , Map.of("object", "film", "id", String.valueOf(id)));
         }
 
         log.trace(String.format("%-40s - %s", "Информация о фильме отправлена", "id=" + id));
