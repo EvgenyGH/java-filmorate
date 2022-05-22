@@ -1,7 +1,9 @@
 package ru.yandex.practicum.filmorate.exception;
 
-public class FilmNotExistsException extends Exception {
-    public FilmNotExistsException(String message) {
-        super(message);
+import java.util.Map;
+
+public class FilmNotExistsException extends BaseFilmAndUserException {
+    public FilmNotExistsException(String message, Map<String, String> properties) {
+        super(message, properties);
     }
 }

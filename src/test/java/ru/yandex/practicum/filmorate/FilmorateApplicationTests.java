@@ -11,9 +11,11 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
@@ -230,5 +232,179 @@ class FilmorateApplicationTests {
         mockMvc.perform(get("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void test3AddRemoveGetFriendsAndLikesGetFilmsAndUsersByIdGetRates() throws Exception {
+        Film[] films = new Film[5];
+        User[] users = new User[5];
+        User user;
+        Film film;
+
+        for (int i = 0; i < 5; i++) {
+            user = new User();
+            user.setId(i + 1);
+            user.setEmail("j3000@bk.ru");
+            user.setLogin("Login");
+            user.setName("Name");
+            user.setBirthday(LocalDate.of(1957, 12, 12));
+
+            film = new Film();
+            film.setDuration(120);
+            film.setName("Film Name");
+            film.setId(i + 1);
+            film.setReleaseDate(LocalDate.now());
+            film.setDescription("Film Description");
+            film.setDuration(120);
+
+            users[i] = user;
+            films[i] = film;
+
+            mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
+                    .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+            mockMvc.perform(post("/users").content(mapper.writeValueAsString(user))
+                    .contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        }
+
+        //тест endpoint /films/{id} GET
+        mockMvc.perform(get("/films/2").contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(films[1])));
+        mockMvc.perform(get("/films/-1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/films/7").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        //тест endpoint /users/{id} GET
+        mockMvc.perform(get("/users/2").contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), content().json(mapper.writeValueAsString(users[1])));
+        mockMvc.perform(get("/users/-1").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/users/7").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+
+        //тест endpoint /users/{id}/friends/{friendId} PUT
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[0]").value(2));
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 6, 7)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", -1, -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        //тест endpoint /users/{id}/friends/{friendId} DELETE
+        mockMvc.perform(delete("/users/{id}/friends/{friendId}", 1, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends.size()").value(0));
+        mockMvc.perform(delete("/users/{id}/friends/{friendId}", 6, 7)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/users/{id}/friends/{friendId}", -1, -2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        //тест endpoint /users/{id}/friends GET
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[0]").value(2));
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 3)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[1]").value(3));
+
+
+        mockMvc.perform(get("/users/{id}/friends", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.size()").value(2));
+        mockMvc.perform(get("/users/{id}/friends", 6)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/users/{id}/friends", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+
+        //тест endpoint /users/{id}/friends/common/{otherId} GET
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[0]").value(2));
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 1, 3)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[1]").value(3));
+        mockMvc.perform(put("/users/{id}/friends/{friendId}", 4, 3)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.friends[0]").value(3));
+
+
+        mockMvc.perform(get("/users/{id}/friends/common/{otherId}", 1, 4)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$..id").value(3));
+        mockMvc.perform(get("/users/{id}/friends/common/{otherId}", 6, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(get("/users/{id}/friends/common/{otherId}", 1, -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        //тест endpoint /films/{id}/like/{userId} PUT
+        mockMvc.perform(put("/films/{id}/like/{userId}", 1, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(1));
+        mockMvc.perform(put("/films/{id}/like/{userId}", 6, 6)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 1, -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        //тест endpoint /films/{id}/like/{userId} DELETE
+        mockMvc.perform(delete("/films/{id}/like/{userId}", 1, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(0));
+        mockMvc.perform(delete("/films/{id}/like/{userId}", 6, 6)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+        mockMvc.perform(delete("/films/{id}/like/{userId}", 1, -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+
+        //тест endpoint /films/popular GET
+        mockMvc.perform(put("/films/{id}/like/{userId}", 1, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 2, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 2, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 2, 3)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 3, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(put("/films/{id}/like/{userId}", 3, 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/films/popular?count={count}", 2)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.size()").value(2));
+
+        films[1].setFilmLikes(Set.of(1L, 2L, 3L));
+        films[2].setFilmLikes(Set.of(1L, 2L));
+        films[0].setFilmLikes(Set.of(1L));
+
+        mockMvc.perform(get("/films/popular", 1, 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.size()").value(5),
+                        content().json(mapper.writeValueAsString(
+                                List.of(films[1], films[2], films[0], films[3], films[4]))));
+        mockMvc.perform(get("/films/popular?count={count}", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 }

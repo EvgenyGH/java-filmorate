@@ -9,11 +9,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Slf4j
 public class Film {
-    private int id;
+    //По условиям ТЗ id может быть отрицательным
+    private long id;
     //название не может быть пустым
     @NotBlank
     private String name;
@@ -27,12 +30,8 @@ public class Film {
     //продолжительность фильма должна быть положительной
     @Positive
     private int duration;
-
-    public void validateId() throws ValidationException {
-        if (id <= 0) {
-            throwValidationException("ID должен быть > 0");
-        }
-    }
+    //список лайков пользователей(id)
+    private Set<Long> filmLikes = new HashSet<>();
 
     private void throwValidationException(String message) throws ValidationException {
         log.warn(String.format("%-40s - ID=%5s - %s", "Выброшено исключение", id, message));
