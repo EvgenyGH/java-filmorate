@@ -1,12 +1,18 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ErrorResponse {
+    @Getter
     private final String dateTime;
+    @Getter
     private final String error;
+    @Getter
     private final String object;
+    @Getter
     private final String id;
 
     public ErrorResponse(String error) {
@@ -21,21 +27,5 @@ public class ErrorResponse {
         this.object = properties.get("object");
         this.dateTime = LocalDateTime.now().toString();
         this.id = properties.get("id");
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public String getObject() {
-        return object;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public String getId() {
-        return id;
     }
 }

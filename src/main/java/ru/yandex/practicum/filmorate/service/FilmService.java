@@ -29,8 +29,7 @@ public class FilmService {
 
         filmStorage.getFilmById(filmId).getFilmLikes().add(userId);
 
-        log.trace(String.format("%-40s - %s", "Добавлен лайк к фильму", "Film id="
-                + filmId + " User id=" + userId));
+        log.trace("Добавлен лайк к фильму -> Film id={} User id={}", filmId, userId);
 
         return filmStorage.getFilmById(filmId);
     }
@@ -41,16 +40,15 @@ public class FilmService {
 
         filmStorage.getFilmById(filmId).getFilmLikes().remove(userId);
 
-        log.trace(String.format("%-40s - %s", "Удален лайк к фильму", "Film id="
-                + filmId + " User id=" + userId));
+        log.trace("Удален лайк к фильму -> Film id={} User id={}", filmId, userId);
 
         return filmStorage.getFilmById(filmId);
     }
 
     //получить топ популярных фильмов
     public List<Film> getTopFilms(long count) {
-        log.trace(String.format("%-40s - %s", "Отправлен топ популярных фильмов"
-                , "Количество фильмов - " + count));
+        log.trace("Отправлен топ популярных фильмов -> Количество фильмов: {}", count);
+
         return filmStorage.getFilms().stream().sorted((film1, film2) -> {
                     long film1Likes = film1.getFilmLikes().size();
                     long film2Likes = film2.getFilmLikes().size();

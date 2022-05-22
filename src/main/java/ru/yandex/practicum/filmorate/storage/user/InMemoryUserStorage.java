@@ -27,7 +27,7 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserExistsException(String.format("Пользователь id=%s уже создан", user.getId())
                     , Map.of("object", "user", "id", String.valueOf(user.getId())));
         }
-        log.trace(String.format("%-40s - %s", "Добавлен пользователь", user));
+        log.trace("Добавлен пользователь -> User: {}", user);
 
         return user;
     }
@@ -41,7 +41,7 @@ public class InMemoryUserStorage implements UserStorage {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует", user.getId())
                     , Map.of("object", "user", "id", String.valueOf(user.getId())));
         }
-        log.trace(String.format("%-40s - %s", "Информация о пользователе обновлена", user));
+        log.trace("Информация о пользователе обновлена -> User: {}", user);
 
         return user;
     }
@@ -49,7 +49,7 @@ public class InMemoryUserStorage implements UserStorage {
     //получение списка всех пользователей
     @Override
     public Collection<User> getUsers() {
-        log.trace(String.format("%-40s - %s", "Информация о всех пользователях отправлена", ""));
+        log.trace("Информация о всех пользователях отправлена");
         return users.values();
     }
 
@@ -63,7 +63,7 @@ public class InMemoryUserStorage implements UserStorage {
                     , Map.of("object", "user", "id", String.valueOf(id)));
         }
 
-        log.trace(String.format("%-40s - %s", "Информация о пользователе отправлена", "id=" + id));
+        log.trace("Информация о пользователе отправлена -> User id={}", id);
 
         return user;
     }

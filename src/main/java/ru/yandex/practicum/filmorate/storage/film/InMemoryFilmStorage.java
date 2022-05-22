@@ -27,7 +27,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new FilmExistsException(String.format("Фильм id=%s уже создан", film.getId())
                     , Map.of("object", "film", "id", String.valueOf(film.getId())));
         }
-        log.trace(String.format("%-40s - %s", "Добавлен фильм", film));
+        log.trace("Добавлен фильм -> Film: {}", film);
 
         return film;
     }
@@ -40,7 +40,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId())
                     , Map.of("object", "film", "id", String.valueOf(film.getId())));
         }
-        log.trace(String.format("%-40s - %s", "Информация о фильме обновлена", film));
+        log.trace("Информация о фильме обновлена -> Film: {}", film);
 
         return film;
     }
@@ -48,7 +48,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     //получение списка всех фильмов
     @Override
     public Collection<Film> getFilms() {
-        log.trace(String.format("%-40s - %s", "Информация о всех фильмах отправлена", ""));
+        log.trace("Информация о всех фильмах отправлена");
         return films.values();
     }
 
@@ -62,7 +62,7 @@ public class InMemoryFilmStorage implements FilmStorage {
                     , Map.of("object", "film", "id", String.valueOf(id)));
         }
 
-        log.trace(String.format("%-40s - %s", "Информация о фильме отправлена", "id=" + id));
+        log.trace("Информация о фильме отправлена -> Film id={}", id);
 
         return film;
     }

@@ -30,8 +30,7 @@ public class UserService {
         userMain.getFriends().add(idFriend);
         userFriend.getFriends().add(idMain);
 
-        log.trace(String.format("%-40s - %s", "Пользователи стали друзьями", "User1 id=' "
-                + userMain + " User2 = " + userFriend));
+        log.trace("Пользователи стали друзьями -> User1 id={} и User2 id={}", idMain, idFriend);
 
         return userMain;
     }
@@ -46,8 +45,7 @@ public class UserService {
         userMain.getFriends().remove(idFriend);
         userFriend.getFriends().remove(idMain);
 
-        log.trace(String.format("%-40s - %s", "Пользователи удалились из друзей", "User1 = "
-                + userMain + " User2 = " + userFriend));
+        log.trace("Пользователи удалились из друзей -> User1 id={} User2 id={}", idMain, idFriend);
 
         return userMain;
     }
@@ -59,8 +57,7 @@ public class UserService {
         Set<Long> user1Friends = userStorage.getUserById(id1).getFriends();
         Set<Long> user2Friends = userStorage.getUserById(id2).getFriends();
 
-        log.trace(String.format("%-40s - %s", "Отправлены общие друзья пользователей", "User1 id="
-                + id1 + " User2 id=" + id2));
+        log.trace("Отправлены общие друзья пользователей -> User1 id={} User2 id={}", id1, id2);
 
         return user1Friends.stream().filter(user2Friends::contains)
                 .map(userStorage::getUserById).collect(Collectors.toSet());
@@ -68,6 +65,7 @@ public class UserService {
 
     //возвращает список пользователей, являющихся друзьями
     public Set<User> getFriends(long id) {
+        log.trace("Отправлен список друзей пользователя -> User id={}", id);
         return userStorage.getUserById(id).getFriends().stream()
                 .map(userStorage::getUserById).collect(Collectors.toSet());
     }
