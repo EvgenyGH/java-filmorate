@@ -11,6 +11,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -155,6 +157,8 @@ class FilmorateApplicationTests {
         film.setReleaseDate(LocalDate.now());
         film.setDescription("Film Description");
         film.setDuration(120);
+        film.setMpa("G");
+        film.setGenresList(new HashSet<>(Arrays.asList("Комедия")));
 
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -232,6 +236,25 @@ class FilmorateApplicationTests {
         mockMvc.perform(get("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+
+        film.setMpa("N");
+        mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(put("/films").content(mapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+        film.setMpa("G");
+
+        film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Пародия")));
+        mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+        mockMvc.perform(put("/films").content(mapper.writeValueAsString(film))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
+        film.setGenresList(new HashSet<>(Arrays.asList("Комедия")));
     }
 
     @Test
@@ -256,6 +279,8 @@ class FilmorateApplicationTests {
             film.setReleaseDate(LocalDate.now());
             film.setDescription("Film Description");
             film.setDuration(120);
+            film.setMpa("G");
+            film.setGenresList(new HashSet<>(Arrays.asList("Комедия")));
 
             users[i] = user;
             films[i] = film;

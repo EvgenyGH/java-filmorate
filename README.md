@@ -1,7 +1,8 @@
 # **Java-filmorate**
 
 ## *`Sprint 4`*
-#### *- Add ER*
+#### *- Refactor ER*
+#### *- Refactor User model and Film model*
 
 ___
 

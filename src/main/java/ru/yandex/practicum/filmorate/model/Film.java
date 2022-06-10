@@ -2,7 +2,8 @@ package ru.yandex.practicum.filmorate.model;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import ru.yandex.practicum.filmorate.validators.Genres;
+import ru.yandex.practicum.filmorate.validators.Mpa;
 import ru.yandex.practicum.filmorate.validators.ReleaseDate;
 
 import javax.validation.constraints.NotBlank;
@@ -32,9 +33,10 @@ public class Film {
     private int duration;
     //список лайков пользователей(id)
     private Set<Long> filmLikes = new HashSet<>();
-
-    private void throwValidationException(String message) throws ValidationException {
-        log.warn(String.format("%-40s - ID=%5s - %s", "Выброшено исключение", id, message));
-        throw new ValidationException(message);
-    }
+    //Жанр. У фильма может быть сразу несколько жанров
+    @Genres
+    private Set<String> genresList = new HashSet<>();
+    // рейтинг Ассоциации кинокомпаний (англ. Motion Picture Association, сокращённо МРА)
+    @Mpa
+    private String mpa;
 }
