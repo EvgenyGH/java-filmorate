@@ -1,9 +1,14 @@
 # **Java-filmorate**
 
-## *`Sprint 3`*
+## *`Sprint 4`*
 #### *- Add ER*
-#### ![Entity relationship](/ER/ER.png)
-#### *- Requests examples:*     
+
+___
+
+### *`Sprint 3`*
+##### *- Add ER*
+##### ![Entity relationship](/ER/ER.png)
+##### *- Requests examples:*     
 - *Get films:*       
   `SELECT * `  
 `FROM films`
