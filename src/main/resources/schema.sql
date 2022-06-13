@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS films
     release_date date         NOT NULL CHECK release_date >= '1985-12-28',
     duration     integer      NOT NULL CHECK duration > 0,
     mpa_id       integer      NOT NULL,
-    CONSTRAINT fk_mpa_id FOREIGN KEY (mpa_id) REFERENCES mpa (mpa_id)
+    CONSTRAINT fk_mpa_id FOREIGN KEY (mpa_id) REFERENCES mpa (mpa_id) ON DELETE SET NULL
     );
 
 CREATE TABLE IF NOT EXISTS users
@@ -28,8 +28,9 @@ CREATE TABLE IF NOT EXISTS user_friends
 (
     user_id   bigint,
     friend_id bigint,
-    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id),
-    CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (user_id),
+    CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT fk_friend_id FOREIGN KEY (friend_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT pk_uf PRIMARY KEY (user_id, friend_id),
     CHECK user_id <> user_friends.friend_id
     );
 
@@ -37,8 +38,9 @@ CREATE TABLE IF NOT EXISTS film_likes
 (
     film_id       bigint,
     user_liked_id bigint,
-    CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES films (film_id),
-    CONSTRAINT fk_user_liked_id FOREIGN KEY (user_liked_id) REFERENCES users (user_id)
+    CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES films (film_id) ON DELETE CASCADE ,
+    CONSTRAINT fk_user_liked_id FOREIGN KEY (user_liked_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT pk_fl PRIMARY KEY (film_id, user_liked_id)
     );
 
 CREATE TABLE IF NOT EXISTS genres
@@ -51,7 +53,6 @@ CREATE TABLE IF NOT EXISTS film_genres
 (
     film_id  bigint,
     genre_id integer,
-    CONSTRAINT fk_film_id_genres FOREIGN KEY (film_id) REFERENCES films (film_id),
-    CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genres (genre_id)
-
+    CONSTRAINT fk_film_id_genres FOREIGN KEY (film_id) REFERENCES films (film_id) ON DELETE CASCADE,
+    CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genres (genre_id) ON DELETE CASCADE
     );

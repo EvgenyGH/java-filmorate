@@ -27,8 +27,9 @@ public class UserService {
         User userMain = userStorage.getUserById(idMain);
         User userFriend = userStorage.getUserById(idFriend);
 
-        userMain.getFriends().add(idFriend);
-        userFriend.getFriends().add(idMain);
+        // TODO: 13.06.2022 доработать друзей
+        userMain.getFriends().put(idFriend, "!!!Доработать");
+        userFriend.getFriends().put(idMain, "!!!Доработать");
 
         log.trace("Пользователи стали друзьями -> User1 id={} и User2 id={}", idMain, idFriend);
 
@@ -54,20 +55,25 @@ public class UserService {
     public Set<User> getMutualFriends(long id1, long id2) {
         validateUsers(id1, id2);
 
-        Set<Long> user1Friends = userStorage.getUserById(id1).getFriends();
-        Set<Long> user2Friends = userStorage.getUserById(id2).getFriends();
+        // TODO: 13.06.2022 Доделать
+        Map<Long, String> user1Friends = userStorage.getUserById(id1).getFriends();
+        Map<Long, String> user2Friends = userStorage.getUserById(id2).getFriends();
 
         log.trace("Отправлены общие друзья пользователей -> User1 id={} User2 id={}", id1, id2);
 
-        return user1Friends.stream().filter(user2Friends::contains)
-                .map(userStorage::getUserById).collect(Collectors.toSet());
+        return null; // TODO: 13.06.2022 доделать
+        //return user1Friends.stream().filter(user2Friends::contains)
+                //.map(userStorage::getUserById).collect(Collectors.toSet());
     }
 
     //возвращает список пользователей, являющихся друзьями
     public Set<User> getFriends(long id) {
         log.trace("Отправлен список друзей пользователя -> User id={}", id);
-        return userStorage.getUserById(id).getFriends().stream()
-                .map(userStorage::getUserById).collect(Collectors.toSet());
+
+        // TODO: 13.06.2022 доделать
+        //return userStorage.getUserById(id).getFriends().stream()
+          //      .map(userStorage::getUserById).collect(Collectors.toSet());
+        return null;
     }
 
     //проверка на существование друзей
