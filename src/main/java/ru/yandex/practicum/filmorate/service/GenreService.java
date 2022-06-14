@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.storage.genres.GenreStorage;
 import java.util.Map;
 
 @Service
-@Slf4j
 public class GenreService {
     private final GenreStorage genreStorage;
 

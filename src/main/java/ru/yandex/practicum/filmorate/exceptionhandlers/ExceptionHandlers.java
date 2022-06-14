@@ -25,7 +25,8 @@ public class ExceptionHandlers {
         return new ErrorResponse("Ошибка валидации входящих данных.");
     }
 
-    @ExceptionHandler(value = {UserNotExistsException.class, FilmNotExistsException.class})
+    @ExceptionHandler(value = {UserNotExistsException.class, FilmNotExistsException.class
+            , GenreNotExistException.class, MpaNotExistException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFoundHandler(BaseFilmAndUserException exception) {
         log.warn("Выброшено исключение -> {}", exception.getMessage());
