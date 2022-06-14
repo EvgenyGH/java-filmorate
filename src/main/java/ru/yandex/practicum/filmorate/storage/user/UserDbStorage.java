@@ -32,6 +32,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User addUser(User user) {
+        user.validateName();
+
         String sqlAddUser = "INSERT INTO users (email, login, name, birthday) VALUES ( ?, ?, ?, ? )";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -70,6 +72,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User updateUser(User user) {
+        user.validateName();
+
         String sqlUpdateFilm = "UPDATE users " +
                 "SET email=?, " +
                 "login=?, " +

@@ -17,7 +17,7 @@ public class UserController {
     private final UserStorage userStorage;
     private final UserService userService;
 
-    public UserController(InMemoryUserStorage userStorage, UserService userService) {
+    public UserController(UserStorage userStorage, UserService userService) {
         this.userStorage = userStorage;
         this.userService = userService;
     }

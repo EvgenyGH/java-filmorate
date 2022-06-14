@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.validators.Genres;
 import ru.yandex.practicum.filmorate.validators.Mpa;
@@ -15,6 +17,8 @@ import java.util.Set;
 
 @Data
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
     //По условиям ТЗ id может быть отрицательным
     private long id;

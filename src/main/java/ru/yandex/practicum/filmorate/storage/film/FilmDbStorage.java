@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 
-// TODO: 13.06.2022 realize
 @Slf4j
 @Repository
 @Primary

@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Email;
@@ -13,6 +15,8 @@ import java.util.Map;
 
 @Data
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     //По условиям ТЗ id может быть отрицательным
     private long id;
