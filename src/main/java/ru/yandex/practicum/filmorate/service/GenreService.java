@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.genres.GenreStorage;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class GenreService {
@@ -14,11 +14,11 @@ public class GenreService {
         this.genreStorage = genreStorage;
     }
 
-    public Map<Integer, String> getAllGenres() {
+    public List<Genre> getAllGenres() {
         return genreStorage.getAllGenres();
     }
 
-    public Map<Integer, String> getGenreById(int id) {
+    public Genre getGenreById(int id) {
         return genreStorage.getGenreById(id);
     }
 }

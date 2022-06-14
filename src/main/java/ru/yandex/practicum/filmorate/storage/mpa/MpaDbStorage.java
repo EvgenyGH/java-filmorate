@@ -6,11 +6,11 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.GenreNotExistException;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 @Slf4j
@@ -23,21 +23,19 @@ public class MpaDbStorage implements MpaStorage {
     }
 
     @Override
-    public Map<Integer, String> getAllMpa() {
+    public List<Mpa> getAllMpa() {
         String sql = "SELECT * FROM mpa";
-        Map<Integer, String> mpaMap = new HashMap<>();
+        List<Mpa> mpaList = jdbcTemplate.query(sql, this::makeMpa);
 
-        jdbcTemplate.query(sql, this::makeMpa).forEach(mpaMap::putAll);
+        log.trace("Все MPA выгружены -> всего: {}", mpaList.size());
 
-        log.trace("Все MPA выгружены -> всего: {}", mpaMap.size());
-
-        return mpaMap;
+        return mpaList;
     }
 
     @Override
-    public Map<Integer, String> getMpaById(int id) {
+    public Mpa getMpaById(int id) {
         String sql = "SELECT * FROM mpa WHERE mpa_id=?";
-        Map<Integer, String> mpa;
+        Mpa mpa;
         try {
             mpa = jdbcTemplate.queryForObject(sql, this::makeMpa, id);
         } catch (DataAccessException exception) {
@@ -50,7 +48,7 @@ public class MpaDbStorage implements MpaStorage {
         return mpa;
     }
 
-    private Map<Integer, String> makeMpa(ResultSet rs, int rowNum) throws SQLException {
-        return Map.of(rs.getInt("mpa_id"), rs.getString("mpa_name"));
+    private Mpa makeMpa(ResultSet rs, int rowNum) throws SQLException {
+        return new Mpa(rs.getInt("mpa_id"), rs.getString("mpa_name"));
     }
 }

@@ -2,9 +2,10 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
-import java.util.Map;
+import java.util.List;
 
 @Service
 public class MpaService {
@@ -14,11 +15,11 @@ public class MpaService {
         this.mpaStorage = mpaStorage;
     }
 
-    public Map<Integer, String> getAllMpa() {
+    public List<Mpa> getAllMpa() {
         return mpaStorage.getAllMpa();
     }
 
-    public Map<Integer, String> getMpaById(@PathVariable int id) {
+    public Mpa getMpaById(@PathVariable int id) {
         return mpaStorage.getMpaById(id);
     }
 }

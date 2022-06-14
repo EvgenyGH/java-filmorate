@@ -16,10 +16,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -30,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @Sql({"/schema.sql", "/fillDbForTest.sql"})
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
-public class TestFilmAndUserControllers {
+public class TestFilmAndUserAndGenreAndMpaControllers {
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -438,5 +435,17 @@ public class TestFilmAndUserControllers {
         mockMvc.perform(get("/films/popular?count={count}", -1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void getAllMpaAndMpaByIdTest() throws Exception {
+        /*mockMvc.perform(get("/mpa")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.size()").value(6),
+                        content().json(mapper.writeValueAsString(
+                                Map.of()));
+        mockMvc.perform(get("/films/popular?count={count}", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());*/
     }
 }

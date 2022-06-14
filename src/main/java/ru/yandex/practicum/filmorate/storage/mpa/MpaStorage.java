@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.storage.mpa;
 
-import java.util.Map;
+import ru.yandex.practicum.filmorate.model.Mpa;
+
+import java.util.List;
 
 public interface MpaStorage {
-    Map<Integer, String> getAllMpa();
-    Map<Integer, String> getMpaById(int id);
+    List<Mpa> getAllMpa();
+    Mpa getMpaById(int id);
 }
