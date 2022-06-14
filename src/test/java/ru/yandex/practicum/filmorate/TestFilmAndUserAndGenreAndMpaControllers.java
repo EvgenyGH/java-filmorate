@@ -13,10 +13,15 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -439,13 +444,49 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
 
     @Test
     public void getAllMpaAndMpaByIdTest() throws Exception {
-        /*mockMvc.perform(get("/mpa")
+        mockMvc.perform(get("/mpa")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.size()").value(5),
+                        content().json(mapper.writeValueAsString(
+                                List.of(new Mpa(1, "G"), new Mpa(2, "PG")
+                                        , new Mpa(3, "PG-13"), new Mpa(4, "R")
+                                        , new Mpa(5, "NC-17")))));
+
+        mockMvc.perform(get("/mpa/{id}", -1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(get("/mpa/{id}", "a")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/mpa/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.name").value("G"));
+
+    }
+
+    @Test
+    public void getAllGenresAndGenreByIdTest() throws Exception {
+        mockMvc.perform(get("/genres")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(status().isOk(), jsonPath("$.size()").value(6),
                         content().json(mapper.writeValueAsString(
-                                Map.of()));
-        mockMvc.perform(get("/films/popular?count={count}", -1)
+                                List.of(new Genre(1, "Комедия"), new Genre(2, "Драма")
+                                        , new Genre(3, "Мультфильм"), new Genre(4, "Триллер")
+                                        , new Genre(5, "Документальный"), new Genre(6, "Боевик")))));
+
+        mockMvc.perform(get("/genres/{id}", -1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());*/
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(get("/genres/{id}", "a")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(get("/genres/{id}", 3)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpectAll(status().isOk(), jsonPath("$.name").value("Мультфильм"));
+
     }
 }
