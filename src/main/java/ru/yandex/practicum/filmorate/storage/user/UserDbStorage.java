@@ -74,7 +74,7 @@ public class UserDbStorage implements UserStorage {
     public User updateUser(User user) {
         user.validateName();
 
-        String sqlUpdateFilm = "UPDATE users " +
+        String sqlUpdateUser = "UPDATE users " +
                 "SET email=?, " +
                 "login=?, " +
                 "name=?," +
@@ -82,7 +82,7 @@ public class UserDbStorage implements UserStorage {
                 "WHERE user_id=?";
 
         try {
-            if (jdbcTemplate.update(sqlUpdateFilm, user.getEmail(), user.getLogin()
+            if (jdbcTemplate.update(sqlUpdateUser, user.getEmail(), user.getLogin()
                     , user.getName(), user.getBirthday(), user.getId()) != 1) {
                 throw new FilmNotExistsException(String.format("Пользователя id=%s не существует"
                         , user.getId())

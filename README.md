@@ -3,40 +3,43 @@
 ## *`Sprint 4`*
 #### *- Refactor ER*
 #### *- Refactor User model and Film model*
+#### *- Add Genre Model and Mpa Model*
+#### *- Add H2 database support*
+#### *- Add Genre Controller and Mpa Controller*
+#### *- Add Genre Service and Mpa Service*
+#### *- Add Genre DAO and Mpa DAO*
+#### *- Add User DAO and Film DAO*
+#### *- Add RuntimeExceptions: GenreNotExistException, MpaNotExistException, SqlExceptionFilmorate*
+#### *- Add endpoints GET /genres, GET /genres/{id}, GET /mpa, GET /mpa/{id}tests*
+#### *- Add tests for endpoints GET /genres, GET /genres/{id}, GET /mpa, GET /mpa/{id} tests*
+#### *- Add DAO tests*
 
 ___
 
 ### *`Sprint 3`*
 ##### *- Add ER*
 ##### ![Entity relationship](/ER/ER.png)
-##### *- Requests examples:*     
-- *Get films:*       
-  `SELECT * `  
-`FROM films`
-- *Get films by id:*     
-  `SELECT * `  
-  `FROM films`  
-  `WHERE film_id=id`
-- *Get ids of users liked the film:*     
-  `SELECT user_liked_id `  
-  `FROM film_likes`  
-  ` WHERE film_id=id`
-- *Get users:*     
-  `SELECT * `  
-  `FROM users`
-- *Get users by id:*     
-  `SELECT * `  
-  `FROM users`    
-  `WHERE user_id=id`
-- *Get user friends ids:*     
-  `SELECT friend_id `  
-  `FROM users`  
-  `WHERE user_id=id`
-- *Get two users friendship:*   
-  `SELECT uf.user_id, uf.friend_id,`   
-  `FROM user_friends AS uf`  
-  `WHERE (uf.user_id=u_id AND uf.friend_id=f_id)`   
-  `OR (uf.user_id=f_id AND uf.friend_id=u_id)`
+##### *- Requests examples:*
+- *Update user:*     
+  `UPDATE users`
+  `SET email=?,`
+  `login=?,`
+  `name=?,`
+  `birthday=?`
+  `WHERE user_id=?;`
+- *Insert Genres:*     
+  `INSERT INTO film_genres (film_id, genre_id)`
+  `VALUES (?, ?);`
+- *Add Film:*     
+  `INSERT INTO films (name, description, release_date`
+- `, duration, mpa_id, rate)`
+  `VALUES ( ?, ?, ?, ?, ?, ?);`
+- *Get Genres List:*   
+  `SELECT film_id, genre_name, genres.genre_id `   
+  `FROM film_genres`  
+  `LEFT JOIN genres ON film_genres.genre_id = genres.genre_id `   
+  `WHERE film_id=? `
+  `ORDER BY genre_id;`
 
 ___
 
