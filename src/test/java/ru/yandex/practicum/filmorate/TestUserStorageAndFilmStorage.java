@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@Sql({"/schema.sql", "/fillDbForTest.sql"})
 public class TestUserStorageAndFilmStorage {
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
