@@ -168,7 +168,9 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         film.setReleaseDate(LocalDate.now());
         film.setDescription("Film Description");
         film.setMpa(new Mpa(1, "G"));
-        film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Документальный")));
+        film.setGenres(new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма"), new Genre(3, "Мультфильм")
+                , new Genre(4, "Документальный"))));
 
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -248,7 +250,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
                 .andExpect(status().isOk());
 
 
-        film.setMpa(new Mpa(4, "N"));
+        film.setMpa(new Mpa(6, "N"));
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
@@ -257,14 +259,16 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
                 .andExpect(status().is4xxClientError());
         film.setMpa(new Mpa(1, "G"));
 
-        film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Пародия")));
+        film.setGenres(new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(7, "Документальный"))));
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
         mockMvc.perform(put("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
-        film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Документальный")));
+        film.setGenres(new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма"), new Genre(3, "Мультфильм"))));
     }
 
     @Test
@@ -290,7 +294,9 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
             film.setDescription("Film Description");
             film.setDuration(120);
             film.setMpa(new Mpa(1, "G"));
-            film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Документальный")));
+            film.setGenres(new HashSet<>(Arrays.asList(new Genre(2, "Драма")
+                    , new Genre(3, "Мультфильм")
+                    , new Genre(5, "Документальный"))));
 
             users[i] = user;
             films[i] = film;
@@ -384,7 +390,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         //тест endpoint /films/{id}/like/{userId} PUT
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(1));
+                .andExpectAll(status().isOk(), jsonPath("$.rate").value(1));
         mockMvc.perform(put("/films/{id}/like/{userId}", 6, 6)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -395,7 +401,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         //тест endpoint /films/{id}/like/{userId} DELETE
         mockMvc.perform(delete("/films/{id}/like/{userId}", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(0));
+                .andExpectAll(status().isOk(), jsonPath("$.rate").value(0));
         mockMvc.perform(delete("/films/{id}/like/{userId}", 6, 6)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -428,9 +434,9 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(status().isOk(), jsonPath("$.size()").value(2));
 
-        films[1].setFilmLikes(Set.of(1L, 2L, 3L));
-        films[2].setFilmLikes(Set.of(1L, 2L));
-        films[0].setFilmLikes(Set.of(1L));
+        films[1].setRate(3L);
+        films[2].setRate(2L);
+        films[0].setRate(1L);
 
         mockMvc.perform(get("/films/popular", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))

@@ -28,7 +28,7 @@ public class FilmService {
         validateFilmAndUser(filmId, userId);
 
         Film film = filmStorage.getFilmById(filmId);
-        film.getFilmLikes().add(userId);
+        film.setRate(film.getRate() + 1);
         filmStorage.updateFilm(film);
 
         log.trace("Добавлен лайк к фильму -> Film id={} User id={}", filmId, userId);
@@ -41,7 +41,7 @@ public class FilmService {
         validateFilmAndUser(filmId, userId);
 
         Film film = filmStorage.getFilmById(filmId);
-        film.getFilmLikes().remove(userId);
+        film.setRate(film.getRate() - 1);
         filmStorage.updateFilm(film);
 
         log.trace("Удален лайк к фильму -> Film id={} User id={}", filmId, userId);
@@ -54,8 +54,8 @@ public class FilmService {
         log.trace("Отправлен топ популярных фильмов -> Количество фильмов: {}", count);
 
         return filmStorage.getFilms().stream().sorted((film1, film2) -> {
-                    long film1Likes = film1.getFilmLikes().size();
-                    long film2Likes = film2.getFilmLikes().size();
+                    long film1Likes = film1.getRate();
+                    long film2Likes = film2.getRate();
 
                     if (film1Likes < film2Likes) {
                         return 1;

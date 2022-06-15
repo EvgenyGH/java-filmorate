@@ -4,14 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.validators.Genres;
 import ru.yandex.practicum.filmorate.validators.ReleaseDate;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -34,11 +32,10 @@ public class Film {
     //продолжительность фильма должна быть положительной
     @Positive
     private int duration;
-    //список лайков пользователей(id)
-    private Set<Long> filmLikes = new HashSet<>();
+    //Лайки пользователей
+    private long rate;
     //Жанр. У фильма может быть сразу несколько жанров
-    @Genres
-    private Set<String> genresList = new HashSet<>(); // TODO: 15.06.2022
+    private Set<Genre> genres;
     // рейтинг Ассоциации кинокомпаний (англ. Motion Picture Association, сокращённо МРА)
     private Mpa mpa;
 }

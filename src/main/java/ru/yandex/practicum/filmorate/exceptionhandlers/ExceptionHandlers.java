@@ -41,7 +41,7 @@ public class ExceptionHandlers {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse otherExceptionHandler(SqlExceptionFilmorate exception) {
         log.warn("Выброшено исключение -> {}", exception.getMessage());
         return new ErrorResponse("Ошибка запроса БД.", exception.getProperties());

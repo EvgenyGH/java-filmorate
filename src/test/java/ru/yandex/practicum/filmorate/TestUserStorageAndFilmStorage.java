@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -32,18 +33,23 @@ public class TestUserStorageAndFilmStorage {
     public void testFilmStorage() {
         //Тест filmStorage.addFilm();
         filmStorage.addFilm(new Film(1L, "name1", "description1", LocalDate.now()
-                , 100, new HashSet<>()
-                , new HashSet<>(Arrays.asList("Комедия", "Драма", "Мультфильм", "Документальный"))
+                , 100, 100
+                , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма"), new Genre(3, "Мультфильм")
+                , new Genre(4, "Документальный")))
                 , new Mpa(1, "G")));
 
         filmStorage.addFilm(new Film(2L, "name2", "description2", LocalDate.now()
-                , 90, new HashSet<>()
-                , new HashSet<>(Arrays.asList("Комедия", "Драма", "Мультфильм", "Триллер", "Документальный"))
-                , new Mpa(2,"PG")));
+                , 90, 100
+                , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма")
+                , new Genre(4, "Документальный")))
+                , new Mpa(2, "PG")));
 
         filmStorage.addFilm(new Film(3L, "name3", "description3", LocalDate.now()
-                , 120, new HashSet<>()
-                , new HashSet<>(Arrays.asList("Комедия", "Драма", "Мультфильм"))
+                , 120, 100
+                , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(4, "Документальный")))
                 , new Mpa(5, "NC-17")));
 
         //Тест filmStorage.getFilms();
@@ -55,14 +61,17 @@ public class TestUserStorageAndFilmStorage {
 
         //Тест filmStorage.updateFilm();
         filmStorage.updateFilm(new Film(1L, "name1upd", "description1", LocalDate.now()
-                , 100, new HashSet<>()
-                , new HashSet<>(Arrays.asList("Комедия", "Драма", "Мультфильм", "Документальный"))
+                , 100, 100
+                , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма"), new Genre(3, "Мультфильм")
+                , new Genre(4, "Документальный")))
                 , new Mpa(1, "G")));
         assertEquals("name1upd", filmStorage.getFilmById(1L).getName());
 
         filmStorage.updateFilm(new Film(3L, "name3", "description3upd", LocalDate.now()
-                , 100, new HashSet<>()
-                , new HashSet<>(Arrays.asList("Комедия", "Драма", "Мультфильм", "Документальный"))
+                , 100, 100
+                , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
+                , new Genre(2, "Драма"), new Genre(3, "Мультфильм")))
                 , new Mpa(1, "G")));
         assertEquals("description3upd", filmStorage.getFilmById(3L).getDescription());
     }

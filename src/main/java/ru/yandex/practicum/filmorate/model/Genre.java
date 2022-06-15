@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
+@Data
 @RequiredArgsConstructor
 public class Genre {
     @NotNull
