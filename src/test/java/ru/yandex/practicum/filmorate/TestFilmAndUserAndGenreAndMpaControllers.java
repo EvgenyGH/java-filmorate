@@ -167,7 +167,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         film.setId(1);
         film.setReleaseDate(LocalDate.now());
         film.setDescription("Film Description");
-        film.setMpa("G");
+        film.setMpa(new Mpa(1, "G"));
         film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Документальный")));
 
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
@@ -248,14 +248,14 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
                 .andExpect(status().isOk());
 
 
-        film.setMpa("N");
+        film.setMpa(new Mpa(4, "N"));
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
         mockMvc.perform(put("/films").content(mapper.writeValueAsString(film))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
-        film.setMpa("G");
+        film.setMpa(new Mpa(1, "G"));
 
         film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Пародия")));
         mockMvc.perform(post("/films").content(mapper.writeValueAsString(film))
@@ -289,7 +289,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
             film.setReleaseDate(LocalDate.now());
             film.setDescription("Film Description");
             film.setDuration(120);
-            film.setMpa("G");
+            film.setMpa(new Mpa(1, "G"));
             film.setGenresList(new HashSet<>(Arrays.asList("Комедия", "Документальный")));
 
             users[i] = user;

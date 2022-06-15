@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.FilmNotExistsException;
 import ru.yandex.practicum.filmorate.exception.SqlExceptionFilmorate;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -33,9 +35,8 @@ public class FilmDbStorage implements FilmStorage {
     @Override
     public Film addFilm(Film film) {
 
-        String sqlAddFilm = "INSERT INTO films (name, description, release_date, duration, mpa_id)\n" +
-                "VALUES ( ?, ?, ?, ?, " +
-                "SELECT mpa_id FROM mpa WHERE mpa.mpa_name=?)";
+        String sqlAddFilm = "INSERT INTO films (name, description, release_date, duration, mpa_id) " +
+                "VALUES ( ?, ?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -46,7 +47,7 @@ public class FilmDbStorage implements FilmStorage {
                 ps.setString(2, film.getDescription());
                 ps.setDate(3, Date.valueOf(film.getReleaseDate()));
                 ps.setInt(4, film.getDuration());
-                ps.setString(5, film.getMpa());
+                ps.setInt(5, film.getMpa().getId());
                 return ps;
             }, keyHolder);
 
@@ -87,12 +88,12 @@ public class FilmDbStorage implements FilmStorage {
                 "description=?, " +
                 "release_date=?," +
                 "duration=?, " +
-                "mpa_id=(SELECT mpa_id FROM mpa WHERE mpa.mpa_name=?)" +
+                "mpa_id=?" +
                 "WHERE film_id=?";
 
         try {
             if (jdbcTemplate.update(sqlUpdateFilm, film.getName(), film.getDescription(), film.getReleaseDate()
-                    , film.getDuration(), film.getMpa(), film.getId()) != 1) {
+                    , film.getDuration(), film.getMpa().getId(), film.getId()) != 1) {
                 throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId())
                         , Map.of("object", "film", "id", String.valueOf(film.getId())));
             }
@@ -117,8 +118,8 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Collection<Film> getFilms() {
-        String sql = "SELECT film_id, name, description, release_date, duration, mpa_name\n" +
-                "FROM films\n" +
+        String sql = "SELECT film_id, name, description, release_date, duration, films.mpa_id, mpa_name " +
+                "FROM films " +
                 "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id";
 
         Collection<Film> films;
@@ -137,9 +138,9 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(long id) {
-        String sql = "SELECT film_id, name, description, release_date, duration, mpa_name\n" +
-                "FROM films\n" +
-                "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id\n" +
+        String sql = "SELECT film_id, name, description, release_date, duration, films.mpa_id, mpa_name " +
+                "FROM films " +
+                "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id " +
                 "WHERE film_id = ?";
 
         Film film;
@@ -160,7 +161,7 @@ public class FilmDbStorage implements FilmStorage {
         Film film = new Film();
         film.setId(rs.getLong("film_id"));
         film.setName(rs.getString("name"));
-        film.setMpa(rs.getString("mpa_name"));
+        film.setMpa(new Mpa(rs.getInt("mpa_id"), rs.getString("mpa_name")));
         film.setDuration(rs.getInt("duration"));
         film.setDescription(rs.getString("description"));
         film.setReleaseDate(rs.getDate("release_date").toLocalDate());
