@@ -29,19 +29,19 @@ public class FilmDbStorage implements FilmStorage {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final String sqlAddFilm = "INSERT INTO films (name, description, release_date, duration" +
+    private static final String SQL_ADD_FILM = "INSERT INTO films (name, description, release_date, duration" +
             ", mpa_id, rate) " +
             "VALUES ( ?, ?, ?, ?, ?, ?)";
 
-    private static final String sqlInsertGenres = "INSERT INTO film_genres (film_id, genre_id) " +
+    private static final String SQL_INSERT_GENRES = "INSERT INTO film_genres (film_id, genre_id) " +
             "VALUES (?, ?)";
 
-    private static final String sqlGetGenresList = "SELECT film_id, genre_name, genres.genre_id FROM film_genres " +
+    private static final String SQL_GET_GENRES_LIST = "SELECT film_id, genre_name, genres.genre_id FROM film_genres " +
             "LEFT JOIN genres ON film_genres.genre_id = genres.genre_id " +
             "WHERE film_id=? " +
             "ORDER BY genre_id";
 
-    private static final String sqlUpdateFilm = "UPDATE films " +
+    private static final String SQL_UPDATE_FILM = "UPDATE films " +
             "SET name=?, " +
             "description=?, " +
             "release_date=?," +
@@ -50,14 +50,14 @@ public class FilmDbStorage implements FilmStorage {
             "rate=?" +
             "WHERE film_id=?";
 
-    private static final String sqlDeleteGenres = "DELETE FROM film_genres WHERE film_id=?";
+    private static final String SQL_DELETE_GENRES = "DELETE FROM film_genres WHERE film_id=?";
 
-    private static final String sqlGetFilms = "SELECT film_id, name, description, release_date, duration" +
+    private static final String SQL_GET_FILMS = "SELECT film_id, name, description, release_date, duration" +
             ", films.mpa_id, mpa_name, rate " +
             "FROM films " +
             "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id";
 
-    private static final String sqlGetFilmById = "SELECT film_id, name, description, release_date" +
+    private static final String SQL_GET_FILM_BY_ID = "SELECT film_id, name, description, release_date" +
             ", duration, films.mpa_id, mpa_name, rate " +
             "FROM films " +
             "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id " +
@@ -74,7 +74,7 @@ public class FilmDbStorage implements FilmStorage {
 
         try {
             jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sqlAddFilm, new String[]{"film_id"});
+                PreparedStatement ps = connection.prepareStatement(SQL_ADD_FILM, new String[]{"film_id"});
                 ps.setString(1, film.getName());
                 ps.setString(2, film.getDescription());
                 ps.setDate(3, Date.valueOf(film.getReleaseDate()));
@@ -104,13 +104,13 @@ public class FilmDbStorage implements FilmStorage {
         }
 
         for (Genre genre : film.getGenres()) {
-            jdbcTemplate.update(sqlInsertGenres, film.getId(), genre.getId());
+            jdbcTemplate.update(SQL_INSERT_GENRES, film.getId(), genre.getId());
         }
     }
 
     private void updateFilmsWithGenres(Film film) {
 
-        Set<Genre> genres = new HashSet<>(jdbcTemplate.query(sqlGetGenresList, this::makeGenresList, film.getId()));
+        Set<Genre> genres = new HashSet<>(jdbcTemplate.query(SQL_GET_GENRES_LIST, this::makeGenresList, film.getId()));
 
         if (genres.size() > 0) {
             film.setGenres(genres);
@@ -121,14 +121,14 @@ public class FilmDbStorage implements FilmStorage {
     public Film updateFilm(Film film) {
 
         try {
-            if (jdbcTemplate.update(sqlUpdateFilm, film.getName(), film.getDescription(), film.getReleaseDate()
+            if (jdbcTemplate.update(SQL_UPDATE_FILM, film.getName(), film.getDescription(), film.getReleaseDate()
                     , film.getDuration(), film.getMpa().getId(), film.getRate()
                     , film.getId()) != 1) {
                 throw new FilmNotExistsException(String.format("Фильма id=%s не существует", film.getId())
                         , Map.of("object", "film", "id", String.valueOf(film.getId())));
             }
 
-            jdbcTemplate.update(sqlDeleteGenres, film.getId());
+            jdbcTemplate.update(SQL_DELETE_GENRES, film.getId());
             insertGenres(film);
             updateFilmsWithGenres(film);
 
@@ -148,7 +148,7 @@ public class FilmDbStorage implements FilmStorage {
         Collection<Film> films;
 
         try {
-            films = jdbcTemplate.query(sqlGetFilms, this::makeFilm);
+            films = jdbcTemplate.query(SQL_GET_FILMS, this::makeFilm);
         } catch (DataAccessException exception) {
             throw new SqlExceptionFilmorate("Ошибка при выгрузке всех фильмов из БД."
                     , Map.of("object", "films", "id", "all"));
@@ -165,7 +165,7 @@ public class FilmDbStorage implements FilmStorage {
         Film film;
 
         try {
-            film = jdbcTemplate.queryForObject(sqlGetFilmById, this::makeFilm, id);
+            film = jdbcTemplate.queryForObject(SQL_GET_FILM_BY_ID, this::makeFilm, id);
         } catch (DataAccessException exception) {
             throw new FilmNotExistsException(String.format("Фильма id=%s не существует.", id)
                     , Map.of("object", "film", "id", String.valueOf(id)));

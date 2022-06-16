@@ -26,26 +26,26 @@ import java.util.Map;
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
 
-    private final static String sqlAddUser = "INSERT INTO users (email, login, name, birthday) " +
+    private final static String SQL_ADD_USER = "INSERT INTO users (email, login, name, birthday) " +
             "VALUES ( ?, ?, ?, ? )";
 
-    private final static String sqlInsertUserFriends = "INSERT INTO user_friends(user_id, friend_id) " +
+    private final static String SQL_INSERT_USER_FRIENDS = "INSERT INTO user_friends(user_id, friend_id) " +
             "VALUES(?, ?)";
 
-    private final static String sqlUpdateUser = "UPDATE users " +
+    private final static String SQL_UPDATE_USER = "UPDATE users " +
             "SET email=?, " +
             "login=?, " +
             "name=?," +
             "birthday=? " +
             "WHERE user_id=?";
 
-    private final static String sqlDeleteUserFriends = "DELETE FROM user_friends WHERE user_id=?";
+    private final static String SQL_DELETE_USER_FRIENDS = "DELETE FROM user_friends WHERE user_id=?";
 
-    private final static String sqlGetUser = "SELECT * FROM users";
+    private final static String SQL_GET_USER = "SELECT * FROM users";
 
-    private final static String sqlGetUserById = "SELECT * FROM users WHERE user_id=?";
+    private final static String SQL_GET_USER_BY_ID = "SELECT * FROM users WHERE user_id=?";
 
-    private final static String sqlUserFriends = "SELECT friend_id,\n" +
+    private final static String SQL_USER_FRIENDS = "SELECT friend_id,\n" +
             "       CASE\n" +
             "           WHEN user_id IN (SELECT friend_id FROM user_friends WHERE user_id=uf.friend_id)\n" +
             "           THEN 'подтверждённая'\n" +
@@ -66,7 +66,7 @@ public class UserDbStorage implements UserStorage {
 
         try {
             jdbcTemplate.update(connection -> {
-                PreparedStatement ps = connection.prepareStatement(sqlAddUser, new String[]{"user_id"});
+                PreparedStatement ps = connection.prepareStatement(SQL_ADD_USER, new String[]{"user_id"});
                 ps.setString(1, user.getEmail());
                 ps.setString(2, user.getLogin());
                 ps.setString(3, user.getName());
@@ -90,7 +90,7 @@ public class UserDbStorage implements UserStorage {
 
     private void insertUserFriends(User user) {
         for (Long id : user.getFriends().keySet()) {
-            jdbcTemplate.update(sqlInsertUserFriends, user.getId(), id);
+            jdbcTemplate.update(SQL_INSERT_USER_FRIENDS, user.getId(), id);
         }
     }
 
@@ -99,14 +99,14 @@ public class UserDbStorage implements UserStorage {
         user.validateName();
 
         try {
-            if (jdbcTemplate.update(sqlUpdateUser, user.getEmail(), user.getLogin()
+            if (jdbcTemplate.update(SQL_UPDATE_USER, user.getEmail(), user.getLogin()
                     , user.getName(), user.getBirthday(), user.getId()) != 1) {
                 throw new FilmNotExistsException(String.format("Пользователя id=%s не существует"
                         , user.getId())
                         , Map.of("object", "film", "id", String.valueOf(user.getId())));
             }
 
-            jdbcTemplate.update(sqlDeleteUserFriends, user.getId());
+            jdbcTemplate.update(SQL_DELETE_USER_FRIENDS, user.getId());
 
             insertUserFriends(user);
 
@@ -126,7 +126,7 @@ public class UserDbStorage implements UserStorage {
         Collection<User> users;
 
         try {
-            users = jdbcTemplate.query(sqlGetUser, this::makeUser);
+            users = jdbcTemplate.query(SQL_GET_USER, this::makeUser);
         } catch (DataAccessException exception) {
             throw new UserNotExistsException("Ошибка при выгрузке " +
                     "всех пользователей из БД."
@@ -144,7 +144,7 @@ public class UserDbStorage implements UserStorage {
         User user;
 
         try {
-            user = jdbcTemplate.queryForObject(sqlGetUserById, this::makeUser, id);
+            user = jdbcTemplate.queryForObject(SQL_GET_USER_BY_ID, this::makeUser, id);
         } catch (DataAccessException exception) {
             throw new UserNotExistsException(String.format("Пользователя id=%s не существует.", id)
                     , Map.of("object", "user", "id", String.valueOf(id)));
@@ -165,7 +165,7 @@ public class UserDbStorage implements UserStorage {
 
         HashMap<Long, String> userFriends = new HashMap<>();
 
-        jdbcTemplate.query(sqlUserFriends, this::makeUserFriends, user.getId())
+        jdbcTemplate.query(SQL_USER_FRIENDS, this::makeUserFriends, user.getId())
                 .forEach(userFriends::putAll);
 
         user.setFriends(userFriends);

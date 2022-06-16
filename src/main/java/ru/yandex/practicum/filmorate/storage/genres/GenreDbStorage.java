@@ -19,9 +19,9 @@ import java.util.Map;
 public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
 
-    private final static String sqlGetGenreById = "SELECT * FROM genres WHERE genre_id=?";
+    private final static String SQL_GET_GENRE_BY_ID = "SELECT * FROM genres WHERE genre_id=?";
 
-    private final static String sqlGetAllGenres = "SELECT * FROM genres";
+    private final static String SQL_GET_ALL_GENRES = "SELECT * FROM genres";
 
     public GenreDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -29,7 +29,7 @@ public class GenreDbStorage implements GenreStorage {
 
     @Override
     public List<Genre> getAllGenres() {
-        List<Genre> genres = jdbcTemplate.query(sqlGetAllGenres, this::makeGenreMap);
+        List<Genre> genres = jdbcTemplate.query(SQL_GET_ALL_GENRES, this::makeGenreMap);
 
         log.trace("Все жанры выгружены -> всего: {}", genres.size());
 
@@ -41,7 +41,7 @@ public class GenreDbStorage implements GenreStorage {
         Genre genre;
 
         try {
-            genre = jdbcTemplate.queryForObject(sqlGetGenreById, this::makeGenreMap, id);
+            genre = jdbcTemplate.queryForObject(SQL_GET_GENRE_BY_ID, this::makeGenreMap, id);
         } catch (DataAccessException exception) {
             throw new GenreNotExistException(String.format("Жанр id=%s не существует.", id)
                     , Map.of("object", "genre", "id", String.valueOf(id)));

@@ -19,9 +19,9 @@ import java.util.Map;
 public class MpaDbStorage implements MpaStorage {
     private final JdbcTemplate jdbcTemplate;
 
-    private static final String sqlGetAllMpa = "SELECT * FROM mpa";
+    private static final String SQL_GET_ALL_MPA = "SELECT * FROM mpa";
 
-    private static final String sqlGetMpaById = "SELECT * FROM mpa WHERE mpa_id=?";
+    private static final String SQL_GET_MPA_BY_ID = "SELECT * FROM mpa WHERE mpa_id=?";
 
     public MpaDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -29,7 +29,7 @@ public class MpaDbStorage implements MpaStorage {
 
     @Override
     public List<Mpa> getAllMpa() {
-        List<Mpa> mpaList = jdbcTemplate.query(sqlGetAllMpa, this::makeMpa);
+        List<Mpa> mpaList = jdbcTemplate.query(SQL_GET_ALL_MPA, this::makeMpa);
 
         log.trace("Все MPA выгружены -> всего: {}", mpaList.size());
 
@@ -40,7 +40,7 @@ public class MpaDbStorage implements MpaStorage {
     public Mpa getMpaById(int id) {
         Mpa mpa;
         try {
-            mpa = jdbcTemplate.queryForObject(sqlGetMpaById, this::makeMpa, id);
+            mpa = jdbcTemplate.queryForObject(SQL_GET_MPA_BY_ID, this::makeMpa, id);
         } catch (DataAccessException exception) {
             throw new GenreNotExistException(String.format("MPA id=%s не существует.", id)
                     , Map.of("object", "mpa", "id", String.valueOf(id)));
