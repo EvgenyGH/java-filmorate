@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -38,4 +39,6 @@ public class Film {
     private Set<Genre> genres;
     // рейтинг Ассоциации кинокомпаний (англ. Motion Picture Association, сокращённо МРА)
     private Mpa mpa;
+    //список лайков пользователей(id)
+    private Set<Long> filmLikes = new HashSet();
 }
