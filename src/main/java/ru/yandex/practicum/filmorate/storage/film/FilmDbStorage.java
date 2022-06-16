@@ -63,6 +63,15 @@ public class FilmDbStorage implements FilmStorage {
             "LEFT JOIN mpa ON films.mpa_id = mpa.mpa_id " +
             "WHERE film_id = ?";
 
+    private static final String SQL_INSERT_LIKES = "INSERT INTO film_likes(film_id, user_liked_id) " +
+            "VALUES(?, ?)";
+
+    private static final String SQL_GET_FILM_LIKES = "SELECT user_liked_id " +
+            "FROM film_likes " +
+            "WHERE film_id=?";
+
+    private static final String SQL_DELETE_LIKES = "DELETE FROM film_likes WHERE film_id=?";
+
     public FilmDbStorage(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -86,7 +95,7 @@ public class FilmDbStorage implements FilmStorage {
 
             film.setId(keyHolder.getKey().longValue());
 
-            insertGenres(film);
+            insertLikesAndGenres(film);
 
         } catch (DataAccessException exception) {
             throw new SqlExceptionFilmorate("Ошибка при добавлении фильма в БД."
@@ -98,7 +107,11 @@ public class FilmDbStorage implements FilmStorage {
         return film;
     }
 
-    private void insertGenres(Film film) {
+    private void insertLikesAndGenres(Film film) {
+        for (Long id : film.getFilmLikes()) {
+            jdbcTemplate.update(SQL_INSERT_LIKES, film.getId(), id);
+        }
+
         if (film.getGenres() == null) {
             return;
         }
@@ -108,13 +121,15 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    private void updateFilmsWithGenres(Film film) {
+    private void updateFilmsWithGenresAndLikes(Film film) {
 
         Set<Genre> genres = new HashSet<>(jdbcTemplate.query(SQL_GET_GENRES_LIST, this::makeGenresList, film.getId()));
 
         if (genres.size() > 0) {
             film.setGenres(genres);
         }
+
+        film.setFilmLikes(new HashSet<>(jdbcTemplate.query(SQL_GET_FILM_LIKES, this::makeFilmLikes, film.getId())));
     }
 
     @Override
@@ -128,9 +143,10 @@ public class FilmDbStorage implements FilmStorage {
                         , Map.of("object", "film", "id", String.valueOf(film.getId())));
             }
 
+            jdbcTemplate.update(SQL_DELETE_LIKES, film.getId());
             jdbcTemplate.update(SQL_DELETE_GENRES, film.getId());
-            insertGenres(film);
-            updateFilmsWithGenres(film);
+            insertLikesAndGenres(film);
+            updateFilmsWithGenresAndLikes(film);
 
         } catch (DataAccessException exception) {
             throw new SqlExceptionFilmorate("Ошибка при обновлении фильма в БД."
@@ -186,7 +202,7 @@ public class FilmDbStorage implements FilmStorage {
         film.setReleaseDate(rs.getDate("release_date").toLocalDate());
         film.setRate(rs.getLong("rate"));
 
-        updateFilmsWithGenres(film);
+        updateFilmsWithGenresAndLikes(film);
 
         return film;
     }
@@ -194,5 +210,9 @@ public class FilmDbStorage implements FilmStorage {
     private Genre makeGenresList(ResultSet rs, int rowNum) throws SQLException {
         return new Genre(rs.getInt("genre_id")
                 , rs.getString("genre_name"));
+    }
+
+    private Long makeFilmLikes(ResultSet rs, int rowNum) throws SQLException {
+        return rs.getLong("user_liked_id");
     }
 }

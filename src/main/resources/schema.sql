@@ -49,6 +49,15 @@ CREATE TABLE IF NOT EXISTS film_genres
     CONSTRAINT fk_genre_id FOREIGN KEY (genre_id) REFERENCES genres (genre_id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS film_likes
+(
+    film_id       bigint,
+    user_liked_id bigint,
+    CONSTRAINT fk_film_id FOREIGN KEY (film_id) REFERENCES films (film_id) ON DELETE CASCADE ,
+    CONSTRAINT fk_user_liked_id FOREIGN KEY (user_liked_id) REFERENCES users (user_id) ON DELETE CASCADE,
+    CONSTRAINT pk_fl PRIMARY KEY (film_id, user_liked_id)
+);
+
 MERGE INTO mpa KEY (mpa_id) VALUES (1, 'G');
 MERGE INTO mpa KEY (mpa_id) VALUES (2, 'PG');
 MERGE INTO mpa KEY (mpa_id) VALUES (3, 'PG-13');

@@ -389,7 +389,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         //тест endpoint /films/{id}/like/{userId} PUT
         mockMvc.perform(put("/films/{id}/like/{userId}", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpectAll(status().isOk(), jsonPath("$.rate").value(1));
+                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(1));
         mockMvc.perform(put("/films/{id}/like/{userId}", 6, 6)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -400,7 +400,7 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
         //тест endpoint /films/{id}/like/{userId} DELETE
         mockMvc.perform(delete("/films/{id}/like/{userId}", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpectAll(status().isOk(), jsonPath("$.rate").value(0));
+                .andExpectAll(status().isOk(), jsonPath("$.filmLikes.size()").value(0));
         mockMvc.perform(delete("/films/{id}/like/{userId}", 6, 6)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
@@ -433,9 +433,9 @@ public class TestFilmAndUserAndGenreAndMpaControllers {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpectAll(status().isOk(), jsonPath("$.size()").value(2));
 
-        films[1].setRate(3L);
-        films[2].setRate(2L);
-        films[0].setRate(1L);
+        films[1].setFilmLikes(Set.of(1L, 2L, 3L));
+        films[2].setFilmLikes(Set.of(1L, 2L));
+        films[0].setFilmLikes(Set.of(1L));
 
         mockMvc.perform(get("/films/popular", 1, 1)
                         .contentType(MediaType.APPLICATION_JSON))

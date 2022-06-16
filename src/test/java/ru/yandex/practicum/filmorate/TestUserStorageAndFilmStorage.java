@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.model.Mpa;
@@ -36,20 +35,20 @@ public class TestUserStorageAndFilmStorage {
                 , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
                 , new Genre(2, "Драма"), new Genre(3, "Мультфильм")
                 , new Genre(4, "Документальный")))
-                , new Mpa(1, "G")));
+                , new Mpa(1, "G"), new HashSet<>()));
 
         filmStorage.addFilm(new Film(2L, "name2", "description2", LocalDate.now()
                 , 90, 100
                 , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
                 , new Genre(2, "Драма")
                 , new Genre(4, "Документальный")))
-                , new Mpa(2, "PG")));
+                , new Mpa(2, "PG"), new HashSet<>()));
 
         filmStorage.addFilm(new Film(3L, "name3", "description3", LocalDate.now()
                 , 120, 100
                 , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
                 , new Genre(4, "Документальный")))
-                , new Mpa(5, "NC-17")));
+                , new Mpa(5, "NC-17"), new HashSet<>()));
 
         //Тест filmStorage.getFilms();
         assertEquals(3, filmStorage.getFilms().size());
@@ -64,14 +63,14 @@ public class TestUserStorageAndFilmStorage {
                 , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
                 , new Genre(2, "Драма"), new Genre(3, "Мультфильм")
                 , new Genre(4, "Документальный")))
-                , new Mpa(1, "G")));
+                , new Mpa(1, "G"), new HashSet<>()));
         assertEquals("name1upd", filmStorage.getFilmById(1L).getName());
 
         filmStorage.updateFilm(new Film(3L, "name3", "description3upd", LocalDate.now()
                 , 100, 100
                 , new HashSet<>(Arrays.asList(new Genre(1, "Комедия")
                 , new Genre(2, "Драма"), new Genre(3, "Мультфильм")))
-                , new Mpa(1, "G")));
+                , new Mpa(1, "G"), new HashSet<>()));
         assertEquals("description3upd", filmStorage.getFilmById(3L).getDescription());
     }
 
