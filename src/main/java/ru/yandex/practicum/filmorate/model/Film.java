@@ -33,12 +33,12 @@ public class Film {
     //продолжительность фильма должна быть положительной
     @Positive
     private int duration;
-    //Лайки пользователей
+    //Неизвестное поле
     private long rate;
     //Жанр. У фильма может быть сразу несколько жанров
     private Set<Genre> genres;
     // рейтинг Ассоциации кинокомпаний (англ. Motion Picture Association, сокращённо МРА)
     private Mpa mpa;
     //список лайков пользователей(id)
-    private Set<Long> filmLikes = new HashSet();
+    private Set<Long> filmLikes = new HashSet<>();
 }
