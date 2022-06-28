@@ -1,8 +1,9 @@
 package ru.yandex.practicum.filmorate.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.validators.ReleaseDate;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,8 @@ import java.util.Set;
 
 @Data
 @Slf4j
+@NoArgsConstructor
+@AllArgsConstructor
 public class Film {
     //По условиям ТЗ id может быть отрицательным
     private long id;
@@ -30,11 +33,12 @@ public class Film {
     //продолжительность фильма должна быть положительной
     @Positive
     private int duration;
+    //Неизвестное поле
+    private long rate;
+    //Жанр. У фильма может быть сразу несколько жанров
+    private Set<Genre> genres;
+    // рейтинг Ассоциации кинокомпаний (англ. Motion Picture Association, сокращённо МРА)
+    private Mpa mpa;
     //список лайков пользователей(id)
     private Set<Long> filmLikes = new HashSet<>();
-
-    private void throwValidationException(String message) throws ValidationException {
-        log.warn(String.format("%-40s - ID=%5s - %s", "Выброшено исключение", id, message));
-        throw new ValidationException(message);
-    }
 }

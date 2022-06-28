@@ -27,22 +27,26 @@ public class FilmService {
     public Film addLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
-        filmStorage.getFilmById(filmId).getFilmLikes().add(userId);
+        Film film = filmStorage.getFilmById(filmId);
+        film.getFilmLikes().add(userId);
+        filmStorage.updateFilm(film);
 
         log.trace("Добавлен лайк к фильму -> Film id={} User id={}", filmId, userId);
 
-        return filmStorage.getFilmById(filmId);
+        return film;
     }
 
     //удалить лайк
     public Film removeLike(long filmId, long userId) {
         validateFilmAndUser(filmId, userId);
 
-        filmStorage.getFilmById(filmId).getFilmLikes().remove(userId);
+        Film film = filmStorage.getFilmById(filmId);
+        film.getFilmLikes().remove(userId);
+        filmStorage.updateFilm(film);
 
         log.trace("Удален лайк к фильму -> Film id={} User id={}", filmId, userId);
 
-        return filmStorage.getFilmById(filmId);
+        return film;
     }
 
     //получить топ популярных фильмов

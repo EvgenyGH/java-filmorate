@@ -25,7 +25,8 @@ public class ExceptionHandlers {
         return new ErrorResponse("Ошибка валидации входящих данных.");
     }
 
-    @ExceptionHandler(value = {UserNotExistsException.class, FilmNotExistsException.class})
+    @ExceptionHandler(value = {UserNotExistsException.class, FilmNotExistsException.class
+            , GenreNotExistException.class, MpaNotExistException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFoundHandler(BaseFilmAndUserException exception) {
         log.warn("Выброшено исключение -> {}", exception.getMessage());
@@ -37,6 +38,13 @@ public class ExceptionHandlers {
     public ErrorResponse alreadyExistsHandler(BaseFilmAndUserException exception) {
         log.warn("Выброшено исключение -> {}", exception.getMessage());
         return new ErrorResponse("Объект уже существует.", exception.getProperties());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse otherExceptionHandler(SqlExceptionFilmorate exception) {
+        log.warn("Выброшено исключение -> {}", exception.getMessage());
+        return new ErrorResponse("Ошибка запроса БД.", exception.getProperties());
     }
 
     @ExceptionHandler
