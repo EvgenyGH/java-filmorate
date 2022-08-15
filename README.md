@@ -1,4 +1,6 @@
 # **Java-filmorate**
+###### The service works with films and it`s ranking. It returns top 5 films with the highest rate.Backend.
+###### Spring-Boot, jdbc, h2, java-core, lombok
 
 ## *`Sprint 4`*
 #### *- Refactor ER*
@@ -32,7 +34,7 @@ ___
   `VALUES (?, ?);`
 - *Add Film:*     
   `INSERT INTO films (name, description, release_date`
-- `, duration, mpa_id, rate)`
+  `, duration, mpa_id, rate)`
   `VALUES ( ?, ?, ?, ?, ?, ?);`
 - *Get Genres List:*   
   `SELECT film_id, genre_name, genres.genre_id `   
