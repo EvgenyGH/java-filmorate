@@ -9,7 +9,7 @@ Spring-Boot (2.6.7), jdbc, h2 (2.1.212), java (sdk 11), lombok (1.18.24)
 ### _Structure_
 The module contains of the main service and embedded H2 database.
 
-[Filmorate API (Swagger)](https://petstore.swagger.io?url=)
+[Filmorate API (Swagger)](https://petstore.swagger.io?url=https://raw.githubusercontent.com/EvgenyGH/java-filmorate/main/api.yaml)
 
 ### _Entity relationship_
 ![Entity relationship](./ER/ER.png)
